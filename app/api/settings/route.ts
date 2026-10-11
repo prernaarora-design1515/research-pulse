@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db/client";
 import { settings } from "@/lib/db/schema";
-import { isAuthenticated } from "@/lib/auth";
 
 export async function GET() {
   const rows = await db.select().from(settings);
@@ -10,10 +9,6 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  if (!(await isAuthenticated())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   const body = await req.json().catch(() => null);
   if (!body || typeof body.key !== "string" || typeof body.value !== "string") {
     return NextResponse.json({ error: "key and value are required" }, { status: 400 });

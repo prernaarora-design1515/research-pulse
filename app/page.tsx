@@ -1,6 +1,5 @@
 import { getLatestBriefId, getBriefDetail } from "@/lib/db/briefQueries";
 import BriefView from "@/components/BriefView";
-import { isAuthenticated } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -16,7 +15,7 @@ export default async function HomePage() {
     );
   }
 
-  const [brief, isAdmin] = await Promise.all([getBriefDetail(latestId), isAuthenticated()]);
+  const brief = await getBriefDetail(latestId);
   if (!brief) {
     return (
       <div className="rounded-lg border border-dashed border-slate-300 bg-white p-8 text-center text-slate-500">
@@ -25,5 +24,5 @@ export default async function HomePage() {
     );
   }
 
-  return <BriefView brief={brief} isAdmin={isAdmin} />;
+  return <BriefView brief={brief} />;
 }

@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import { getBriefDetail } from "@/lib/db/briefQueries";
 import BriefView from "@/components/BriefView";
-import { isAuthenticated } from "@/lib/auth";
 
 export const dynamic = "force-dynamic";
 
@@ -14,8 +13,8 @@ export default async function ArchiveBriefPage({
   const briefId = Number(id);
   if (!Number.isInteger(briefId)) notFound();
 
-  const [brief, isAdmin] = await Promise.all([getBriefDetail(briefId), isAuthenticated()]);
+  const brief = await getBriefDetail(briefId);
   if (!brief) notFound();
 
-  return <BriefView brief={brief} isAdmin={isAdmin} />;
+  return <BriefView brief={brief} />;
 }

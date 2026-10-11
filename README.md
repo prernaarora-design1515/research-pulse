@@ -47,15 +47,14 @@ app/
   page.tsx                   latest brief (public)
   archive/page.tsx           list of past briefs (public)
   archive/[id]/page.tsx      one past brief (public)
-  saved/page.tsx             bookmarks + tags (admin only)
-  settings/page.tsx          domain CRUD, recipient email, Run now (admin only)
-  test/arxiv/page.tsx        proves live arXiv data per domain (admin only)
+  saved/page.tsx             bookmarks + tags
+  settings/page.tsx          domain CRUD, recipient email, Run now
+  test/arxiv/page.tsx        proves live arXiv data per domain
   api/
-    run-brief/route.ts       the pipeline: cron (Bearer CRON_SECRET) or admin session
-    domains/route.ts         domain CRUD (writes require admin session)
-    settings/route.ts        recipient email (writes require admin session)
-    bookmarks/route.ts       bookmarks + tags (writes require admin session)
-    auth/route.ts            admin login/logout
+    run-brief/route.ts       the pipeline (callable by anyone or Vercel Cron)
+    domains/route.ts         domain CRUD
+    settings/route.ts        recipient email
+    bookmarks/route.ts       bookmarks + tags
 lib/
   arxiv.ts                   fetch + parse arXiv Atom XML, 7-day filter
   huggingface.ts              best-effort Daily Papers upvote signal
@@ -63,27 +62,24 @@ lib/
   gemini.ts                   batched Gemini Flash calls, strict JSON parsing + one retry
   pipeline.ts                  orchestrates the whole run-brief pipeline
   email.tsx / emailTemplate.tsx   Resend + React Email template
-  auth.ts                     admin password check + signed session cookie
   db/schema.ts                 Drizzle schema (see below)
 ```
 
 ### Pipeline (`/api/run-brief`)
 
-1. **Authorise** — accepts `Authorization: Bearer <CRON_SECRET>` (Vercel Cron)
-   or an admin session cookie (the "Run now" button).
-2. **Load context** — active domains, and every arXiv id that's ever appeared
+1. **Load context** — active domains, and every arXiv id that's ever appeared
    in a previous brief (for de-duplication).
-3. **Fetch live papers** — per domain, from the arXiv API, limited to the last
+2. **Fetch live papers** — per domain, from the arXiv API, limited to the last
    7 days, ~1 request every 3 seconds (arXiv etiquette).
-4. **Pre-filter** — drop already-shown papers, dedupe the same paper across
+3. **Pre-filter** — drop already-shown papers, dedupe the same paper across
    domains (kept in its best-matching domain), cap each domain at 25
    candidates ranked by keyword relevance + Hugging Face upvotes.
-5. **Score with Gemini Flash** — batches of ~12 papers per call, strict
+4. **Score with Gemini Flash** — batches of ~12 papers per call, strict
    JSON-only output, one retry on a parse failure, skip the batch (not the
    whole run) if it still fails.
-6. **Assemble** — top N per domain (by score) become the brief; everything
+5. **Assemble** — top N per domain (by score) become the brief; everything
    else is saved as "filtered out" but stays queryable.
-7. **Save and deliver** — brief + items saved to Postgres, email sent via
+6. **Save and deliver** — brief + items saved to Postgres, email sent via
    Resend with a link to the full web version.
 
 One domain or data source failing never kills the whole run — errors are
@@ -147,8 +143,6 @@ Fill in every value in `.env.local`:
 | `DATABASE_URL` | your Neon connection string |
 | `RESEND_API_KEY` | from Resend |
 | `EMAIL_FROM` | e.g. `Research Pulse <onboarding@resend.dev>` |
-| `CRON_SECRET` | any random string — generate with `openssl rand -hex 32` |
-| `ADMIN_PASSWORD` | the password that protects `/settings`, `/saved`, and admin actions |
 | `APP_URL` | `http://localhost:3000` locally, your Vercel URL in production |
 
 ### 6. Push the schema and seed the default domains
@@ -169,10 +163,10 @@ Alignment). Edit or replace them any time from `/settings`.
 npm run dev
 ```
 
-Visit `http://localhost:3000/settings`, log in with your `ADMIN_PASSWORD`, set
-a recipient email, and click **Run now** to generate a real brief from live
-arXiv data (takes 1–4 minutes depending on how many domains are active —
-arXiv is queried politely at one request per 3 seconds).
+Visit `http://localhost:3000/settings`, set a recipient email, and click
+**Run now** to generate a real brief from live arXiv data (takes 1–4 minutes
+depending on how many domains are active — arXiv is queried politely at one
+request per 3 seconds).
 
 ## Deploying to Vercel
 
@@ -190,16 +184,15 @@ arXiv is queried politely at one request per 3 seconds).
    can take a few minutes. If you hit the time limit, either upgrade the plan
    or reduce the number of active domains / `papers_to_show`.
 
-## Security
+## Access
 
-- `/api/run-brief` only runs for Vercel Cron (`Authorization: Bearer
-  CRON_SECRET`) or an authenticated admin session.
-- `/settings`, `/saved`, and all write endpoints (domains, bookmarks,
-  settings) require the admin password, set via a signed, httpOnly session
-  cookie — never a plaintext token in the client.
-- The brief and archive pages are public on purpose, so an evaluator (or
-  Kavita's team) can see them without a password — but nobody without the
-  password can change a domain, trigger a run, or add a bookmark.
+There is no login anywhere in this app, by design (per request): `/settings`,
+`/saved`, and `/api/run-brief` are all public. Anyone with the URL can edit
+domains, add/remove bookmarks, change the recipient email, and trigger a full
+pipeline run (which calls the Gemini and Resend APIs and emails the
+configured recipient). If you deploy this somewhere people other than Kavita
+can reach, be aware a public "Run now" means anyone can trigger paid API
+calls and emails on demand, with no rate limiting.
 
 ## What's deliberately not built
 

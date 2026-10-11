@@ -118,22 +118,9 @@ export default function SettingsClient({
     setEmailStatus(res.ok ? "Saved." : data.error ?? "Failed to save");
   }
 
-  async function handleLogout() {
-    await fetch("/api/auth", { method: "DELETE" });
-    window.location.reload();
-  }
-
   return (
     <div className="space-y-10">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-semibold">Settings</h1>
-        <button
-          onClick={handleLogout}
-          className="text-sm text-slate-500 hover:text-slate-800 hover:underline"
-        >
-          Log out
-        </button>
-      </div>
+      <h1 className="text-2xl font-semibold">Settings</h1>
 
       <section className="space-y-3">
         <h2 className="text-lg font-medium">Recipient email</h2>

@@ -14,7 +14,7 @@ const suggestionLabel: Record<string, string> = {
   skip: "Skip",
 };
 
-function PaperCard({ item, isAdmin }: { item: BriefItemView; isAdmin: boolean }) {
+function PaperCard({ item }: { item: BriefItemView }) {
   return (
     <div className="rounded-lg border border-slate-200 bg-white p-4">
       <div className="flex items-start justify-between gap-3">
@@ -27,9 +27,7 @@ function PaperCard({ item, isAdmin }: { item: BriefItemView; isAdmin: boolean })
           {item.title}
         </a>
         <div className="flex shrink-0 items-center gap-2">
-          {isAdmin && (
-            <BookmarkButton paperId={item.paperId} initialBookmarked={item.isBookmarked} />
-          )}
+          <BookmarkButton paperId={item.paperId} initialBookmarked={item.isBookmarked} />
           <span
             className={`whitespace-nowrap rounded px-2 py-0.5 text-xs font-medium ${
               suggestionStyles[item.suggestion] ?? "bg-slate-100 text-slate-600"
@@ -57,7 +55,7 @@ function PaperCard({ item, isAdmin }: { item: BriefItemView; isAdmin: boolean })
   );
 }
 
-export default function BriefView({ brief, isAdmin = false }: { brief: BriefDetail; isAdmin?: boolean }) {
+export default function BriefView({ brief }: { brief: BriefDetail }) {
   const totalShown = brief.domains.reduce((sum, d) => sum + d.selected.length, 0);
 
   return (
@@ -87,7 +85,7 @@ export default function BriefView({ brief, isAdmin = false }: { brief: BriefDeta
 
           <div className="space-y-3">
             {domain.selected.map((item) => (
-              <PaperCard key={item.paperId} item={item} isAdmin={isAdmin} />
+              <PaperCard key={item.paperId} item={item} />
             ))}
           </div>
 

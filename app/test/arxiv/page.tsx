@@ -2,8 +2,6 @@ import { db } from "@/lib/db/client";
 import { domains } from "@/lib/db/schema";
 import { eq } from "drizzle-orm";
 import { fetchArxivPapersForDomain, sleep, ARXIV_REQUEST_DELAY_MS } from "@/lib/arxiv";
-import { isAuthenticated } from "@/lib/auth";
-import LoginForm from "@/app/settings/LoginForm";
 
 export const dynamic = "force-dynamic";
 
@@ -52,19 +50,6 @@ async function loadAllDomains(): Promise<DomainResult[]> {
 }
 
 export default async function ArxivTestPage() {
-  if (!(await isAuthenticated())) {
-    return (
-      <div className="mx-auto max-w-sm">
-        <h1 className="mb-2 text-2xl font-semibold">Admin login required</h1>
-        <p className="mb-6 text-sm text-slate-600">
-          This page calls the live arXiv API on every load, so it&apos;s gated behind the
-          admin password like other operations that hit external services.
-        </p>
-        <LoginForm />
-      </div>
-    );
-  }
-
   const results = await loadAllDomains();
   const totalPapers = results.reduce((sum, r) => sum + (r.papers?.length ?? 0), 0);
 

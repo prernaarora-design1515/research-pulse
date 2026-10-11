@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { eq } from "drizzle-orm";
 import { db } from "@/lib/db/client";
 import { domains } from "@/lib/db/schema";
-import { isAuthenticated } from "@/lib/auth";
 
 function parseListField(value: unknown): string[] | null {
   if (!Array.isArray(value)) return null;
@@ -19,10 +18,6 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  if (!(await isAuthenticated())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   const body = await req.json().catch(() => null);
   if (!body || typeof body.name !== "string" || !body.name.trim()) {
     return NextResponse.json({ error: "Domain name is required" }, { status: 400 });
@@ -64,10 +59,6 @@ export async function POST(req: NextRequest) {
 }
 
 export async function PATCH(req: NextRequest) {
-  if (!(await isAuthenticated())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   const body = await req.json().catch(() => null);
   const id = Number(body?.id);
   if (!Number.isInteger(id)) {
@@ -128,10 +119,6 @@ export async function PATCH(req: NextRequest) {
 }
 
 export async function DELETE(req: NextRequest) {
-  if (!(await isAuthenticated())) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
   const { searchParams } = new URL(req.url);
   const id = Number(searchParams.get("id"));
   if (!Number.isInteger(id)) {
