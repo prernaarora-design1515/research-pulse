@@ -19,10 +19,10 @@ const emptyForm = {
 };
 
 const inputClass =
-  "w-full rounded border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 transition-colors focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100";
+  "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 transition-colors focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100";
 
 const primaryButtonClass =
-  "rounded bg-slate-900 px-4 py-2 text-sm font-medium text-white transition-all hover:bg-accent active:scale-95 disabled:opacity-50 disabled:active:scale-100 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-accent dark:hover:text-accent-foreground";
+  "rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white transition-all hover:bg-accent active:scale-95 disabled:opacity-50 disabled:active:scale-100 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-accent dark:hover:text-accent-foreground";
 
 export default function SettingsClient({
   initialDomains,
@@ -49,15 +49,15 @@ export default function SettingsClient({
       const res = await fetch("/api/run-brief", { method: "POST" });
       const data = await res.json();
       if (!res.ok) {
-        setRunResult(`failed: ${data.error ?? "unknown error"}`);
+        setRunResult(`Failed: ${data.error ?? "unknown error"}`);
         return;
       }
       const errorNote = data.errors?.length ? ` (${data.errors.length} error(s) logged)` : "";
       setRunResult(
-        `done. scanned ${data.papersScanned} papers across ${data.domainsProcessed} domains, selected ${data.papersSelected}.${errorNote} check the home page and your inbox.`
+        `Done. Scanned ${data.papersScanned} papers across ${data.domainsProcessed} domains, selected ${data.papersSelected}.${errorNote} Check the home page and your inbox.`
       );
     } catch {
-      setRunResult("something went wrong triggering the run.");
+      setRunResult("Something went wrong triggering the run.");
     } finally {
       setRunningBrief(false);
     }
@@ -121,19 +121,18 @@ export default function SettingsClient({
       body: JSON.stringify({ key: "recipient_email", value: recipientEmail }),
     });
     const data = await res.json();
-    setEmailStatus(res.ok ? "saved." : data.error ?? "failed to save");
+    setEmailStatus(res.ok ? "Saved." : data.error ?? "Failed to save");
   }
 
   return (
     <div className="animate-fade-in-up space-y-10">
-      <div>
-        <p className="mb-1 text-xs text-accent">{"// settings"}</p>
-        <h1 className="text-2xl font-semibold text-slate-900 dark:text-neutral-100">settings</h1>
-      </div>
+      <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-neutral-100">
+        Settings
+      </h1>
 
       <section className="space-y-3">
         <h2 className="text-sm font-medium text-slate-500 dark:text-neutral-400">
-          {"// recipient_email"}
+          Recipient email
         </h2>
         <form onSubmit={handleSaveEmail} className="flex max-w-md gap-2">
           <input
@@ -145,7 +144,7 @@ export default function SettingsClient({
             className={inputClass}
           />
           <button type="submit" className={primaryButtonClass}>
-            save
+            Save
           </button>
         </form>
         {emailStatus && (
@@ -156,21 +155,14 @@ export default function SettingsClient({
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-sm font-medium text-slate-500 dark:text-neutral-400">{"// run_now"}</h2>
+        <h2 className="text-sm font-medium text-slate-500 dark:text-neutral-400">Run now</h2>
         <button
           onClick={handleRunNow}
           disabled={runningBrief}
           title="Scans active domains, scores with Gemini, emails the result. Takes 1-4 min."
           className={primaryButtonClass}
         >
-          {runningBrief ? (
-            <span className="inline-flex items-center gap-1">
-              running
-              <span className="animate-caret">_</span>
-            </span>
-          ) : (
-            "run now"
-          )}
+          {runningBrief ? "Running…" : "Run now"}
         </button>
         {runResult && (
           <p className="animate-fade-in-up text-sm text-slate-600 dark:text-neutral-400">
@@ -180,11 +172,11 @@ export default function SettingsClient({
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-sm font-medium text-slate-500 dark:text-neutral-400">{"// domains"}</h2>
-        <div className="divide-y divide-slate-200 rounded border border-slate-200 bg-white dark:divide-neutral-800 dark:border-neutral-800 dark:bg-neutral-900">
+        <h2 className="text-sm font-medium text-slate-500 dark:text-neutral-400">Domains</h2>
+        <div className="divide-y divide-slate-200 rounded-xl border border-slate-200 bg-white dark:divide-neutral-800 dark:border-neutral-800 dark:bg-neutral-900">
           {domainsList.length === 0 && (
             <p className="p-4 text-sm text-slate-500 dark:text-neutral-500">
-              no domains yet. add one below.
+              No domains yet. Add one below.
             </p>
           )}
           {domainsList.map((d, i) => (
@@ -197,14 +189,14 @@ export default function SettingsClient({
                 <p className="font-medium text-slate-900 dark:text-neutral-100">
                   {d.name}{" "}
                   {!d.isActive && (
-                    <span className="ml-2 rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-500 dark:bg-neutral-800 dark:text-neutral-500">
+                    <span className="ml-2 rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-500 dark:bg-neutral-800 dark:text-neutral-500">
                       inactive
                     </span>
                   )}
                 </p>
                 <p className="text-sm text-slate-500 dark:text-neutral-500">
-                  categories: {d.arxivCategories.join(", ")} &middot; keywords:{" "}
-                  {d.keywords.join(", ")} &middot; shows top {d.papersToShow}
+                  Categories: {d.arxivCategories.join(", ")} &middot; Keywords:{" "}
+                  {d.keywords.join(", ")} &middot; Shows top {d.papersToShow}
                 </p>
               </div>
               <div className="flex gap-3 text-sm">
@@ -212,13 +204,13 @@ export default function SettingsClient({
                   onClick={() => toggleActive(d)}
                   className="text-slate-600 transition-colors hover:text-accent dark:text-neutral-400"
                 >
-                  {d.isActive ? "deactivate" : "activate"}
+                  {d.isActive ? "Deactivate" : "Activate"}
                 </button>
                 <button
                   onClick={() => deleteDomain(d.id)}
                   className="text-red-600 transition-colors hover:text-red-500 dark:text-red-400"
                 >
-                  delete
+                  Delete
                 </button>
               </div>
             </div>
@@ -227,13 +219,13 @@ export default function SettingsClient({
 
         <form
           onSubmit={handleAddDomain}
-          className="space-y-3 rounded border border-slate-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900"
+          className="space-y-3 rounded-xl border border-slate-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900"
         >
-          <h3 className="font-medium text-slate-800 dark:text-neutral-200">+ add a domain</h3>
+          <h3 className="font-medium text-slate-800 dark:text-neutral-200">Add a domain</h3>
           <div className="grid gap-3 sm:grid-cols-2">
             <div>
               <label className="mb-1 block text-sm text-slate-600 dark:text-neutral-400">
-                name
+                Name
               </label>
               <input
                 value={form.name}
@@ -244,7 +236,7 @@ export default function SettingsClient({
             </div>
             <div>
               <label className="mb-1 block text-sm text-slate-600 dark:text-neutral-400">
-                papers to show
+                Papers to show
               </label>
               <input
                 type="number"
@@ -257,7 +249,7 @@ export default function SettingsClient({
             </div>
             <div>
               <label className="mb-1 block text-sm text-slate-600 dark:text-neutral-400">
-                arxiv categories (comma-separated)
+                arXiv categories (comma-separated)
               </label>
               <input
                 value={form.arxivCategories}
@@ -269,7 +261,7 @@ export default function SettingsClient({
             </div>
             <div>
               <label className="mb-1 block text-sm text-slate-600 dark:text-neutral-400">
-                keywords (comma-separated)
+                Keywords (comma-separated)
               </label>
               <input
                 value={form.keywords}
@@ -282,7 +274,7 @@ export default function SettingsClient({
           </div>
           {formError && <p className="text-sm text-red-600 dark:text-red-400">{formError}</p>}
           <button type="submit" disabled={submitting} className={primaryButtonClass}>
-            {submitting ? "adding..." : "add domain"}
+            {submitting ? "Adding…" : "Add domain"}
           </button>
         </form>
       </section>

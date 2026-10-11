@@ -9,7 +9,7 @@ export default function FilteredOutList({ items }: { items: BriefItemView[] }) {
   if (items.length === 0) return null;
 
   return (
-    <div className="rounded border border-dashed border-slate-300 bg-slate-50 p-3 dark:border-neutral-700 dark:bg-neutral-900/50">
+    <div className="rounded-xl border border-dashed border-slate-300 bg-slate-50 p-4 dark:border-neutral-700 dark:bg-neutral-900/50">
       <button
         onClick={() => setOpen(!open)}
         className="flex items-center gap-1.5 text-sm font-medium text-slate-600 transition-colors hover:text-accent dark:text-neutral-400"
@@ -19,7 +19,7 @@ export default function FilteredOutList({ items }: { items: BriefItemView[] }) {
         >
           ▸
         </span>
-        {open ? "hide" : "show"} {items.length} filtered-out paper{items.length === 1 ? "" : "s"}
+        {open ? "Hide" : "Show"} {items.length} filtered-out paper{items.length === 1 ? "" : "s"}
       </button>
       <div
         className={`grid transition-all duration-300 ease-out ${
