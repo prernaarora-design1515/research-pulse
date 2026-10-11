@@ -119,7 +119,11 @@ export async function runBriefPipeline(): Promise<RunSummary> {
 
   let verdicts = new Map<string, GeminiVerdict>();
   try {
-    verdicts = await scorePapers(allCandidates);
+    const result = await scorePapers(allCandidates);
+    verdicts = result.verdicts;
+    for (const message of result.batchErrors) {
+      summary.errors.push({ domain: "gemini", message });
+    }
   } catch (err) {
     summary.errors.push({
       domain: "gemini",

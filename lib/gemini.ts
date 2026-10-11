@@ -108,38 +108,45 @@ function parseVerdicts(rawText: string): GeminiVerdict[] | null {
 
 /**
  * Scores one batch of papers. Retries once on a parse failure, then gives up
- * on just this batch (returns []) rather than crashing the whole run.
+ * on just this batch (returns []) rather than crashing the whole run. Returns
+ * the last error message too, so callers can surface it even though the run
+ * as a whole continues.
  */
-async function scoreBatch(batch: ScoredPaper[]): Promise<GeminiVerdict[]> {
+async function scoreBatch(
+  batch: ScoredPaper[]
+): Promise<{ verdicts: GeminiVerdict[]; error?: string }> {
   const prompt = buildPrompt(batch);
+  let lastError: string | undefined;
 
   for (let attempt = 0; attempt < 2; attempt++) {
     try {
       const rawText = await callGemini(prompt);
       const verdicts = parseVerdicts(rawText);
-      if (verdicts) return verdicts;
+      if (verdicts) return { verdicts };
+      lastError = "Gemini response could not be parsed as valid JSON verdicts";
     } catch (err) {
-      if (attempt === 1) {
-        console.error("Gemini batch failed after retry:", err);
-      }
+      lastError = err instanceof Error ? err.message : "Unknown Gemini error";
     }
   }
 
-  return [];
+  console.error("Gemini batch failed after retry:", lastError);
+  return { verdicts: [], error: lastError };
 }
 
 export async function scorePapers(
   papers: ScoredPaper[]
-): Promise<Map<string, GeminiVerdict>> {
+): Promise<{ verdicts: Map<string, GeminiVerdict>; batchErrors: string[] }> {
   const verdictsByArxivId = new Map<string, GeminiVerdict>();
+  const batchErrors: string[] = [];
 
   for (let i = 0; i < papers.length; i += BATCH_SIZE) {
     const batch = papers.slice(i, i + BATCH_SIZE);
-    const verdicts = await scoreBatch(batch);
+    const { verdicts, error } = await scoreBatch(batch);
     for (const v of verdicts) {
       verdictsByArxivId.set(v.paper_id, v);
     }
+    if (error) batchErrors.push(error);
   }
 
-  return verdictsByArxivId;
+  return { verdicts: verdictsByArxivId, batchErrors };
 }
