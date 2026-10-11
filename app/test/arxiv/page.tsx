@@ -54,49 +54,60 @@ export default async function ArxivTestPage() {
   const totalPapers = results.reduce((sum, r) => sum + (r.papers?.length ?? 0), 0);
 
   return (
-    <div className="space-y-8">
+    <div className="animate-fade-in-up space-y-8">
       <div>
-        <h1 className="text-2xl font-semibold">arXiv live data test</h1>
-        <p className="mt-1 text-sm text-slate-600">
-          Proves the pipeline pulls real, current papers per domain from the arXiv API
-          (last 7 days). Fetched {totalPapers} papers across {results.length} active
+        <p className="mb-1 text-xs text-accent">{"// test/arxiv"}</p>
+        <h1 className="text-2xl font-semibold text-slate-900 dark:text-neutral-100">
+          arxiv live data test
+        </h1>
+        <p className="mt-1 text-sm text-slate-600 dark:text-neutral-400">
+          proves the pipeline pulls real, current papers per domain from the arxiv api
+          (last 7 days). fetched {totalPapers} papers across {results.length} active
           domains just now.
         </p>
       </div>
 
       {results.map((r) => (
-        <section key={r.id} className="rounded-lg border border-slate-200 bg-white p-4">
-          <h2 className="text-lg font-medium">{r.name}</h2>
-          <p className="mb-3 text-xs text-slate-500">
-            Categories: {r.categories.join(", ")} &middot; Keywords: {r.keywords.join(", ")}
+        <section
+          key={r.id}
+          className="rounded border border-slate-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900"
+        >
+          <h2 className="text-lg font-medium text-slate-900 dark:text-neutral-100">{r.name}</h2>
+          <p className="mb-3 text-xs text-slate-500 dark:text-neutral-500">
+            categories: {r.categories.join(", ")} &middot; keywords: {r.keywords.join(", ")}
           </p>
 
           {r.error && (
-            <p className="text-sm text-red-600">Failed to fetch: {r.error}</p>
+            <p className="text-sm text-red-600 dark:text-red-400">failed to fetch: {r.error}</p>
           )}
 
           {!r.error && r.papers && r.papers.length === 0 && (
-            <p className="text-sm text-slate-500">No papers found in the last 7 days.</p>
+            <p className="text-sm text-slate-500 dark:text-neutral-500">
+              no papers found in the last 7 days.
+            </p>
           )}
 
           {!r.error && r.papers && r.papers.length > 0 && (
             <ul className="space-y-3">
               {r.papers.map((p) => (
-                <li key={p.arxivId} className="border-t border-slate-100 pt-3 first:border-t-0 first:pt-0">
+                <li
+                  key={p.arxivId}
+                  className="border-t border-slate-100 pt-3 first:border-t-0 first:pt-0 dark:border-neutral-800"
+                >
                   <a
                     href={p.url}
                     target="_blank"
                     rel="noreferrer"
-                    className="font-medium text-slate-900 hover:underline"
+                    className="font-medium text-slate-900 hover:underline dark:text-neutral-100"
                   >
                     {p.title}
                   </a>
-                  <p className="text-xs text-slate-500">
+                  <p className="text-xs text-slate-500 dark:text-neutral-500">
                     {p.authors.slice(0, 4).join(", ")}
                     {p.authors.length > 4 ? " et al." : ""} &middot;{" "}
                     {p.publishedAt.toISOString().slice(0, 10)}
                   </p>
-                  <p className="mt-1 text-sm text-slate-700">
+                  <p className="mt-1 text-sm text-slate-700 dark:text-neutral-300">
                     {p.abstract.slice(0, 220)}
                     {p.abstract.length > 220 ? "..." : ""}
                   </p>

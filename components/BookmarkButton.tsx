@@ -11,6 +11,7 @@ export default function BookmarkButton({
 }) {
   const [bookmarked, setBookmarked] = useState(initialBookmarked);
   const [loading, setLoading] = useState(false);
+  const [justToggled, setJustToggled] = useState(false);
 
   async function toggle() {
     setLoading(true);
@@ -26,6 +27,8 @@ export default function BookmarkButton({
         });
         setBookmarked(true);
       }
+      setJustToggled(true);
+      setTimeout(() => setJustToggled(false), 260);
     } finally {
       setLoading(false);
     }
@@ -36,13 +39,15 @@ export default function BookmarkButton({
       onClick={toggle}
       disabled={loading}
       aria-label={bookmarked ? "Remove bookmark" : "Bookmark this paper"}
-      className={`shrink-0 rounded px-2 py-0.5 text-xs font-medium ${
+      className={`shrink-0 rounded px-2 py-0.5 text-xs font-medium transition-colors active:scale-90 ${
+        justToggled ? "animate-pop" : ""
+      } ${
         bookmarked
-          ? "bg-yellow-100 text-yellow-800 hover:bg-yellow-200"
-          : "bg-slate-100 text-slate-500 hover:bg-slate-200"
+          ? "bg-yellow-100 text-yellow-800 hover:bg-yellow-200 dark:bg-yellow-500/15 dark:text-yellow-400 dark:hover:bg-yellow-500/25"
+          : "bg-slate-100 text-slate-500 hover:bg-slate-200 dark:bg-neutral-800 dark:text-neutral-500 dark:hover:bg-neutral-700"
       } disabled:opacity-50`}
     >
-      {bookmarked ? "★ Saved" : "☆ Save"}
+      {bookmarked ? "★ saved" : "☆ save"}
     </button>
   );
 }

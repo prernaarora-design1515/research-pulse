@@ -1,6 +1,101 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
 @theme inline {
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --font-sans: var(--font-mono);
+  --font-mono: var(--font-mono);
+  --color-accent: #22c55e;
+  --color-accent-foreground: #04150a;
+}
+
+:root {
+  color-scheme: light;
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #f7f6f2;
+  color: #16181a;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+[data-theme="dark"] body {
+  background-color: #0b0c0d;
+  color: #e4e4e2;
+}
+
+::selection {
+  background-color: var(--color-accent);
+  color: var(--color-accent-foreground);
+}
+
+/* Smooth, non-jarring color transitions on every element when the theme flips */
+* {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-duration: 150ms;
+  transition-timing-function: ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  html {
+    scroll-behavior: auto !important;
+    transition-duration: 0.001ms !important;
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 320ms ease both;
+}
+
+@keyframes blink-caret {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.animate-caret {
+  animation: blink-caret 1s step-end infinite;
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.15);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.animate-pop {
+  animation: pop 260ms ease;
 }

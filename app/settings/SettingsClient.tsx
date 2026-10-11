@@ -18,6 +18,12 @@ const emptyForm = {
   papersToShow: 4,
 };
 
+const inputClass =
+  "w-full rounded border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 transition-colors focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100";
+
+const primaryButtonClass =
+  "rounded bg-slate-900 px-4 py-2 text-sm font-medium text-white transition-all hover:bg-accent active:scale-95 disabled:opacity-50 disabled:active:scale-100 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-accent dark:hover:text-accent-foreground";
+
 export default function SettingsClient({
   initialDomains,
   initialRecipientEmail,
@@ -43,15 +49,15 @@ export default function SettingsClient({
       const res = await fetch("/api/run-brief", { method: "POST" });
       const data = await res.json();
       if (!res.ok) {
-        setRunResult(`Failed: ${data.error ?? "Unknown error"}`);
+        setRunResult(`failed: ${data.error ?? "unknown error"}`);
         return;
       }
       const errorNote = data.errors?.length ? ` (${data.errors.length} error(s) logged)` : "";
       setRunResult(
-        `Done. Scanned ${data.papersScanned} papers across ${data.domainsProcessed} domains, selected ${data.papersSelected}.${errorNote} Check the home page and your inbox.`
+        `done. scanned ${data.papersScanned} papers across ${data.domainsProcessed} domains, selected ${data.papersSelected}.${errorNote} check the home page and your inbox.`
       );
     } catch {
-      setRunResult("Something went wrong triggering the run.");
+      setRunResult("something went wrong triggering the run.");
     } finally {
       setRunningBrief(false);
     }
@@ -115,17 +121,22 @@ export default function SettingsClient({
       body: JSON.stringify({ key: "recipient_email", value: recipientEmail }),
     });
     const data = await res.json();
-    setEmailStatus(res.ok ? "Saved." : data.error ?? "Failed to save");
+    setEmailStatus(res.ok ? "saved." : data.error ?? "failed to save");
   }
 
   return (
-    <div className="space-y-10">
-      <h1 className="text-2xl font-semibold">Settings</h1>
+    <div className="animate-fade-in-up space-y-10">
+      <div>
+        <p className="mb-1 text-xs text-accent">{"// settings"}</p>
+        <h1 className="text-2xl font-semibold text-slate-900 dark:text-neutral-100">settings</h1>
+      </div>
 
       <section className="space-y-3">
-        <h2 className="text-lg font-medium">Recipient email</h2>
-        <p className="text-sm text-slate-600">
-          Weekly briefs and on-demand runs are emailed here.
+        <h2 className="text-sm font-medium text-slate-500 dark:text-neutral-400">
+          {"// recipient_email"}
+        </h2>
+        <p className="text-sm text-slate-600 dark:text-neutral-400">
+          weekly briefs and on-demand runs are emailed here.
         </p>
         <form onSubmit={handleSaveEmail} className="flex max-w-md gap-2">
           <input
@@ -134,125 +145,147 @@ export default function SettingsClient({
             onChange={(e) => setRecipientEmail(e.target.value)}
             placeholder="kavita@example.com"
             required
-            className="flex-1 rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+            className={inputClass}
           />
-          <button
-            type="submit"
-            className="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700"
-          >
-            Save
+          <button type="submit" className={primaryButtonClass}>
+            save
           </button>
         </form>
-        {emailStatus && <p className="text-sm text-slate-600">{emailStatus}</p>}
+        {emailStatus && (
+          <p className="animate-fade-in-up text-sm text-slate-600 dark:text-neutral-400">
+            {emailStatus}
+          </p>
+        )}
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-lg font-medium">Run now</h2>
-        <p className="text-sm text-slate-600">
-          Scans all active domains for papers from the last 7 days, scores them with Gemini,
-          builds a fresh brief, and emails it to the recipient above. This can take a minute
-          or two (arXiv is queried politely, a few seconds per domain).
+        <h2 className="text-sm font-medium text-slate-500 dark:text-neutral-400">{"// run_now"}</h2>
+        <p className="text-sm text-slate-600 dark:text-neutral-400">
+          scans all active domains for papers from the last 7 days, scores them with gemini,
+          builds a fresh brief, and emails it to the recipient above. this can take a minute
+          or two (arxiv is queried politely, a few seconds per domain).
         </p>
-        <button
-          onClick={handleRunNow}
-          disabled={runningBrief}
-          className="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-50"
-        >
-          {runningBrief ? "Running..." : "Run now"}
+        <button onClick={handleRunNow} disabled={runningBrief} className={primaryButtonClass}>
+          {runningBrief ? (
+            <span className="inline-flex items-center gap-1">
+              running
+              <span className="animate-caret">_</span>
+            </span>
+          ) : (
+            "run now"
+          )}
         </button>
-        {runResult && <p className="text-sm text-slate-600">{runResult}</p>}
+        {runResult && (
+          <p className="animate-fade-in-up text-sm text-slate-600 dark:text-neutral-400">
+            {runResult}
+          </p>
+        )}
       </section>
 
       <section className="space-y-3">
-        <h2 className="text-lg font-medium">Domains</h2>
-        <div className="divide-y divide-slate-200 rounded-lg border border-slate-200 bg-white">
+        <h2 className="text-sm font-medium text-slate-500 dark:text-neutral-400">{"// domains"}</h2>
+        <div className="divide-y divide-slate-200 rounded border border-slate-200 bg-white dark:divide-neutral-800 dark:border-neutral-800 dark:bg-neutral-900">
           {domainsList.length === 0 && (
-            <p className="p-4 text-sm text-slate-500">No domains yet. Add one below.</p>
+            <p className="p-4 text-sm text-slate-500 dark:text-neutral-500">
+              no domains yet. add one below.
+            </p>
           )}
-          {domainsList.map((d) => (
-            <div key={d.id} className="flex flex-col gap-2 p-4 sm:flex-row sm:items-center sm:justify-between">
+          {domainsList.map((d, i) => (
+            <div
+              key={d.id}
+              className="animate-fade-in-up flex flex-col gap-2 p-4 transition-colors hover:bg-slate-50 sm:flex-row sm:items-center sm:justify-between dark:hover:bg-neutral-800/50"
+              style={{ animationDelay: `${Math.min(i, 10) * 40}ms` }}
+            >
               <div>
-                <p className="font-medium text-slate-900">
+                <p className="font-medium text-slate-900 dark:text-neutral-100">
                   {d.name}{" "}
                   {!d.isActive && (
-                    <span className="ml-2 rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-500">
+                    <span className="ml-2 rounded bg-slate-100 px-2 py-0.5 text-xs text-slate-500 dark:bg-neutral-800 dark:text-neutral-500">
                       inactive
                     </span>
                   )}
                 </p>
-                <p className="text-sm text-slate-500">
-                  Categories: {d.arxivCategories.join(", ")} &middot; Keywords: {d.keywords.join(", ")} &middot; Shows top {d.papersToShow}
+                <p className="text-sm text-slate-500 dark:text-neutral-500">
+                  categories: {d.arxivCategories.join(", ")} &middot; keywords:{" "}
+                  {d.keywords.join(", ")} &middot; shows top {d.papersToShow}
                 </p>
               </div>
               <div className="flex gap-3 text-sm">
                 <button
                   onClick={() => toggleActive(d)}
-                  className="text-slate-600 hover:underline"
+                  className="text-slate-600 transition-colors hover:text-accent dark:text-neutral-400"
                 >
-                  {d.isActive ? "Deactivate" : "Activate"}
+                  {d.isActive ? "deactivate" : "activate"}
                 </button>
                 <button
                   onClick={() => deleteDomain(d.id)}
-                  className="text-red-600 hover:underline"
+                  className="text-red-600 transition-colors hover:text-red-500 dark:text-red-400"
                 >
-                  Delete
+                  delete
                 </button>
               </div>
             </div>
           ))}
         </div>
 
-        <form onSubmit={handleAddDomain} className="space-y-3 rounded-lg border border-slate-200 bg-white p-4">
-          <h3 className="font-medium text-slate-800">Add a domain</h3>
+        <form
+          onSubmit={handleAddDomain}
+          className="space-y-3 rounded border border-slate-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900"
+        >
+          <h3 className="font-medium text-slate-800 dark:text-neutral-200">+ add a domain</h3>
           <div className="grid gap-3 sm:grid-cols-2">
             <div>
-              <label className="mb-1 block text-sm text-slate-600">Name</label>
+              <label className="mb-1 block text-sm text-slate-600 dark:text-neutral-400">
+                name
+              </label>
               <input
                 value={form.name}
                 onChange={(e) => setForm({ ...form, name: e.target.value })}
                 required
-                className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+                className={inputClass}
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm text-slate-600">Papers to show</label>
+              <label className="mb-1 block text-sm text-slate-600 dark:text-neutral-400">
+                papers to show
+              </label>
               <input
                 type="number"
                 min={1}
                 max={20}
                 value={form.papersToShow}
                 onChange={(e) => setForm({ ...form, papersToShow: Number(e.target.value) })}
-                className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+                className={inputClass}
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm text-slate-600">arXiv categories (comma-separated)</label>
+              <label className="mb-1 block text-sm text-slate-600 dark:text-neutral-400">
+                arxiv categories (comma-separated)
+              </label>
               <input
                 value={form.arxivCategories}
                 onChange={(e) => setForm({ ...form, arxivCategories: e.target.value })}
                 placeholder="cs.AI, cs.CL"
                 required
-                className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+                className={inputClass}
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm text-slate-600">Keywords (comma-separated)</label>
+              <label className="mb-1 block text-sm text-slate-600 dark:text-neutral-400">
+                keywords (comma-separated)
+              </label>
               <input
                 value={form.keywords}
                 onChange={(e) => setForm({ ...form, keywords: e.target.value })}
                 placeholder="agent, planning"
                 required
-                className="w-full rounded-md border border-slate-300 px-3 py-2 text-sm focus:border-slate-500 focus:outline-none"
+                className={inputClass}
               />
             </div>
           </div>
-          {formError && <p className="text-sm text-red-600">{formError}</p>}
-          <button
-            type="submit"
-            disabled={submitting}
-            className="rounded-md bg-slate-900 px-4 py-2 text-sm font-medium text-white hover:bg-slate-700 disabled:opacity-50"
-          >
-            {submitting ? "Adding..." : "Add domain"}
+          {formError && <p className="text-sm text-red-600 dark:text-red-400">{formError}</p>}
+          <button type="submit" disabled={submitting} className={primaryButtonClass}>
+            {submitting ? "adding..." : "add domain"}
           </button>
         </form>
       </section>
