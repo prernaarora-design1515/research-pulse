@@ -21,7 +21,7 @@ async function loadBriefForEmail(briefId: number): Promise<{
       selectionReason: briefItems.selectionReason,
       summary: briefItems.summary,
       whyItMatters: briefItems.whyItMatters,
-      suggestion: briefItems.suggestion,
+      priority: briefItems.priority,
     })
     .from(briefItems)
     .innerJoin(papers, eq(briefItems.paperId, papers.id))
@@ -40,7 +40,7 @@ async function loadBriefForEmail(briefId: number): Promise<{
       selectionReason: r.selectionReason,
       summary: r.summary,
       whyItMatters: r.whyItMatters,
-      suggestion: r.suggestion,
+      priority: r.priority,
     });
   }
 

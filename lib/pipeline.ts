@@ -156,7 +156,7 @@ export async function runBriefPipeline(): Promise<RunSummary> {
         selectionReason: verdict.selection_reason,
         summary: verdict.summary,
         whyItMatters: verdict.why_it_matters,
-        suggestion: verdict.suggestion,
+        priority: verdict.priority,
         isSelected,
       });
 

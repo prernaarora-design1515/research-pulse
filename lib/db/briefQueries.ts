@@ -4,6 +4,7 @@ import { briefs, briefItems, papers, domains, bookmarks } from "./schema";
 import type { RunSummary } from "../pipeline";
 
 export type BriefItemView = {
+  briefItemId: number;
   paperId: number;
   title: string;
   authors: string[];
@@ -14,9 +15,10 @@ export type BriefItemView = {
   selectionReason: string;
   summary: string;
   whyItMatters: string;
-  suggestion: string;
+  priority: string;
   isSelected: boolean;
   isBookmarked: boolean;
+  tags: string[];
 };
 
 export type BriefDomainView = {
@@ -58,12 +60,20 @@ export async function listBriefs() {
     .orderBy(desc(briefs.createdAt));
 }
 
+export async function getAllTags(): Promise<string[]> {
+  const rows = await db.select({ tags: bookmarks.tags }).from(bookmarks);
+  const set = new Set<string>();
+  for (const r of rows) for (const t of r.tags) set.add(t);
+  return Array.from(set).sort();
+}
+
 export async function getBriefDetail(briefId: number): Promise<BriefDetail | null> {
   const [brief] = await db.select().from(briefs).where(eq(briefs.id, briefId));
   if (!brief) return null;
 
   const rows = await db
     .select({
+      briefItemId: briefItems.id,
       domainId: domains.id,
       domainName: domains.name,
       paperId: papers.id,
@@ -76,7 +86,7 @@ export async function getBriefDetail(briefId: number): Promise<BriefDetail | nul
       selectionReason: briefItems.selectionReason,
       summary: briefItems.summary,
       whyItMatters: briefItems.whyItMatters,
-      suggestion: briefItems.suggestion,
+      priority: briefItems.priority,
       isSelected: briefItems.isSelected,
     })
     .from(briefItems)
@@ -86,13 +96,13 @@ export async function getBriefDetail(briefId: number): Promise<BriefDetail | nul
     .orderBy(domains.id, desc(briefItems.significanceScore));
 
   const paperIds = [...new Set(rows.map((r) => r.paperId))];
-  const bookmarkedPaperIds = new Set<number>();
+  const bookmarkByPaperId = new Map<number, { tags: string[] }>();
   if (paperIds.length > 0) {
     const bookmarkRows = await db
-      .select({ paperId: bookmarks.paperId })
+      .select({ paperId: bookmarks.paperId, tags: bookmarks.tags })
       .from(bookmarks)
       .where(inArray(bookmarks.paperId, paperIds));
-    for (const b of bookmarkRows) bookmarkedPaperIds.add(b.paperId);
+    for (const b of bookmarkRows) bookmarkByPaperId.set(b.paperId, { tags: b.tags });
   }
 
   const domainScanned = (brief.runSummary as RunSummary | null)?.domainScanned ?? {};
@@ -123,7 +133,9 @@ export async function getBriefDetail(briefId: number): Promise<BriefDetail | nul
   }
 
   for (const r of rows) {
+    const bookmark = bookmarkByPaperId.get(r.paperId);
     const item: BriefItemView = {
+      briefItemId: r.briefItemId,
       paperId: r.paperId,
       title: r.title,
       authors: r.authors,
@@ -134,9 +146,10 @@ export async function getBriefDetail(briefId: number): Promise<BriefDetail | nul
       selectionReason: r.selectionReason,
       summary: r.summary,
       whyItMatters: r.whyItMatters,
-      suggestion: r.suggestion,
+      priority: r.priority,
       isSelected: r.isSelected,
-      isBookmarked: bookmarkedPaperIds.has(r.paperId),
+      isBookmarked: bookmark !== undefined,
+      tags: bookmark?.tags ?? [],
     };
     const group = grouped.get(r.domainId)!;
     if (item.isSelected) group.selected.push(item);

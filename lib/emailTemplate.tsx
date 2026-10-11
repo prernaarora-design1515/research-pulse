@@ -16,7 +16,7 @@ export type BriefEmailPaper = {
   selectionReason: string;
   summary: string;
   whyItMatters: string;
-  suggestion: string;
+  priority: string;
 };
 
 export type BriefEmailDomain = {
@@ -24,10 +24,10 @@ export type BriefEmailDomain = {
   papers: BriefEmailPaper[];
 };
 
-const suggestionLabel: Record<string, string> = {
-  read: "Read",
-  flag_for_client: "Flag for client",
-  skip: "Skip",
+const priorityLabel: Record<string, string> = {
+  high: "High priority",
+  medium: "Medium priority",
+  low: "Low priority",
 };
 
 export default function BriefEmail({
@@ -75,7 +75,7 @@ export default function BriefEmail({
                     {paper.title}
                   </Link>
                   <Text style={{ margin: "2px 0", fontSize: "12px", color: "#64748b" }}>
-                    {paper.selectionReason} &middot; {suggestionLabel[paper.suggestion] ?? paper.suggestion}
+                    {paper.selectionReason} &middot; {priorityLabel[paper.priority] ?? paper.priority}
                   </Text>
                   <Text style={{ margin: "4px 0", fontSize: "14px", color: "#1e293b" }}>
                     {paper.summary}

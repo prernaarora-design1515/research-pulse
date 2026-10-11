@@ -7,7 +7,7 @@ export type GeminiVerdict = {
   selection_reason: string;
   summary: string;
   why_it_matters: string;
-  suggestion: "read" | "flag_for_client" | "skip";
+  priority: "low" | "medium" | "high";
 };
 
 const BATCH_SIZE = 12;
@@ -38,6 +38,10 @@ Penalise incremental tweaks and vague claims.
 Base your summary and "why it matters" ONLY on the title and abstract given. Do NOT invent
 results, numbers, or claims that are not stated in the text.
 
+Also assign a priority: "high" for genuinely significant papers worth her immediate attention,
+"medium" for solid but non-urgent reads, "low" for marginal or incremental papers. This is a
+starting suggestion only — she can and will override it herself.
+
 Return ONLY a JSON array (no markdown fences, no prose), one object per paper, in this exact shape:
 [
   {
@@ -46,7 +50,7 @@ Return ONLY a JSON array (no markdown fences, no prose), one object per paper, i
     "selection_reason": "<short tag, e.g. 'New benchmark', 'Surprising evaluation result', 'Reframes the problem', 'Strong SOTA evidence', 'High community attention', 'Incremental'>",
     "summary": "<2 lines, technical, for an expert reader>",
     "why_it_matters": "<1-2 lines: practical / client relevance>",
-    "suggestion": "<one of: read, flag_for_client, skip>"
+    "priority": "<one of: low, medium, high>"
   }
 ]
 
@@ -72,7 +76,7 @@ function isValidVerdict(v: unknown): v is GeminiVerdict {
     typeof obj.selection_reason === "string" &&
     typeof obj.summary === "string" &&
     typeof obj.why_it_matters === "string" &&
-    ["read", "flag_for_client", "skip"].includes(obj.suggestion as string)
+    ["low", "medium", "high"].includes(obj.priority as string)
   );
 }
 

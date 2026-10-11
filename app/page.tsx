@@ -1,4 +1,4 @@
-import { getLatestBriefId, getBriefDetail } from "@/lib/db/briefQueries";
+import { getLatestBriefId, getBriefDetail, getAllTags } from "@/lib/db/briefQueries";
 import BriefView from "@/components/BriefView";
 import EmptyState from "@/components/EmptyState";
 
@@ -15,10 +15,10 @@ export default async function HomePage() {
     );
   }
 
-  const brief = await getBriefDetail(latestId);
+  const [brief, allTags] = await Promise.all([getBriefDetail(latestId), getAllTags()]);
   if (!brief) {
     return <EmptyState title="could not load brief">try refreshing the page.</EmptyState>;
   }
 
-  return <BriefView brief={brief} />;
+  return <BriefView brief={brief} allTags={allTags} />;
 }

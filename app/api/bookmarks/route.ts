@@ -3,6 +3,11 @@ import { eq } from "drizzle-orm";
 import { db } from "@/lib/db/client";
 import { bookmarks, papers } from "@/lib/db/schema";
 
+function cleanTags(tags: unknown): string[] | null {
+  if (!Array.isArray(tags) || !tags.every((t) => typeof t === "string")) return null;
+  return tags.map((t: string) => t.trim()).filter(Boolean);
+}
+
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const tag = searchParams.get("tag");
@@ -27,6 +32,11 @@ export async function GET(req: NextRequest) {
   return NextResponse.json(filtered);
 }
 
+/**
+ * Creates a bookmark for a paper, or — if one already exists — merges in any
+ * tags passed along. This lets tagging a paper directly on the brief/archive
+ * page do double duty as "save + tag" in one call, with no separate step.
+ */
 export async function POST(req: NextRequest) {
   const body = await req.json().catch(() => null);
   const paperId = Number(body?.paperId);
@@ -34,31 +44,46 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "A valid paperId is required" }, { status: 400 });
   }
 
+  const incomingTags = body?.tags !== undefined ? cleanTags(body.tags) : [];
+  if (incomingTags === null) {
+    return NextResponse.json({ error: "tags must be an array of strings" }, { status: 400 });
+  }
+
   const [existing] = await db.select().from(bookmarks).where(eq(bookmarks.paperId, paperId));
   if (existing) {
-    return NextResponse.json(existing, { status: 200 });
+    if (incomingTags.length === 0) return NextResponse.json(existing, { status: 200 });
+    const merged = Array.from(new Set([...existing.tags, ...incomingTags]));
+    const [row] = await db
+      .update(bookmarks)
+      .set({ tags: merged })
+      .where(eq(bookmarks.id, existing.id))
+      .returning();
+    return NextResponse.json(row, { status: 200 });
   }
 
   const [row] = await db
     .insert(bookmarks)
-    .values({ paperId, tags: [], note: null })
+    .values({ paperId, tags: incomingTags, note: null })
     .returning();
   return NextResponse.json(row, { status: 201 });
 }
 
 export async function PATCH(req: NextRequest) {
   const body = await req.json().catch(() => null);
-  const id = Number(body?.id);
-  if (!Number.isInteger(id)) {
-    return NextResponse.json({ error: "A valid bookmark id is required" }, { status: 400 });
+  const id = body?.id !== undefined ? Number(body.id) : null;
+  const paperId = body?.paperId !== undefined ? Number(body.paperId) : null;
+
+  if (!Number.isInteger(id) && !Number.isInteger(paperId)) {
+    return NextResponse.json({ error: "A valid id or paperId is required" }, { status: 400 });
   }
 
   const updates: Partial<typeof bookmarks.$inferInsert> = {};
   if (body.tags !== undefined) {
-    if (!Array.isArray(body.tags) || !body.tags.every((t: unknown) => typeof t === "string")) {
+    const cleaned = cleanTags(body.tags);
+    if (cleaned === null) {
       return NextResponse.json({ error: "tags must be an array of strings" }, { status: 400 });
     }
-    updates.tags = body.tags.map((t: string) => t.trim()).filter(Boolean);
+    updates.tags = cleaned;
   }
   if (body.note !== undefined) {
     updates.note = typeof body.note === "string" ? body.note : null;
@@ -68,7 +93,11 @@ export async function PATCH(req: NextRequest) {
     return NextResponse.json({ error: "No fields to update" }, { status: 400 });
   }
 
-  const [row] = await db.update(bookmarks).set(updates).where(eq(bookmarks.id, id)).returning();
+  const whereClause = Number.isInteger(id)
+    ? eq(bookmarks.id, id as number)
+    : eq(bookmarks.paperId, paperId as number);
+
+  const [row] = await db.update(bookmarks).set(updates).where(whereClause).returning();
   if (!row) return NextResponse.json({ error: "Bookmark not found" }, { status: 404 });
   return NextResponse.json(row);
 }

@@ -54,7 +54,7 @@ export const briefItems = pgTable("brief_items", {
   selectionReason: text("selection_reason").notNull(),
   summary: text("summary").notNull(),
   whyItMatters: text("why_it_matters").notNull(),
-  suggestion: text("suggestion").notNull(), // read | flag_for_client | skip
+  priority: text("suggestion").notNull(), // low | medium | high — AI-suggested, Kavita-editable
   isSelected: boolean("is_selected").notNull().default(false),
 });
 

@@ -17,13 +17,15 @@ and the reason it wasn't picked.
   for each active domain, once a week on a schedule or on demand.
 - Scores every candidate paper with Gemini Flash: a 1–10 significance score, a
   short reason tag, a 2-line technical summary, a "why it matters" line, and a
-  read / flag-for-client / skip suggestion — based only on the title and
-  abstract (no invented claims).
+  low/medium/high priority suggestion — based only on the title and abstract
+  (no invented claims). The priority is a starting suggestion only — Kavita
+  can change it on any paper via a dropdown right on the card.
 - Picks the top N papers per domain (configurable, default 4) for the brief;
   everything else stays visible as "filtered out" with its score and reason.
 - Saves every brief to Postgres so past weeks are browsable in `/archive`.
 - Emails the brief via Resend, with a link back to the full web version.
-- Lets Kavita bookmark papers and tag them for later (`/saved`).
+- Lets Kavita bookmark and tag any paper directly from the brief — adding a
+  tag auto-saves it, no separate step — then browse by tag in `/saved`.
 - Lets Kavita edit her domain list (name, arXiv categories, keywords, how many
   papers to show) from `/settings`, without touching code.
 
@@ -91,7 +93,7 @@ logged into the run's summary and shown in the UI/response.
 - `briefs` — one row per run: week_start, status, papers_scanned, run_summary (JSON)
 - `papers` — deduped by `arxiv_id`: title, authors, abstract, url, published_at, hf_upvotes
 - `brief_items` — one row per (brief, paper, domain): score, reason, summary,
-  why_it_matters, suggestion, `is_selected` (false = filtered out, still viewable)
+  why_it_matters, priority (low/medium/high, editable), `is_selected` (false = filtered out, still viewable)
 - `bookmarks` — paper_id, tags (text[]), note
 - `settings` — key/value (currently just `recipient_email`)
 

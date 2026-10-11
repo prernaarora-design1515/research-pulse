@@ -135,9 +135,6 @@ export default function SettingsClient({
         <h2 className="text-sm font-medium text-slate-500 dark:text-neutral-400">
           {"// recipient_email"}
         </h2>
-        <p className="text-sm text-slate-600 dark:text-neutral-400">
-          weekly briefs and on-demand runs are emailed here.
-        </p>
         <form onSubmit={handleSaveEmail} className="flex max-w-md gap-2">
           <input
             type="email"
@@ -160,12 +157,12 @@ export default function SettingsClient({
 
       <section className="space-y-3">
         <h2 className="text-sm font-medium text-slate-500 dark:text-neutral-400">{"// run_now"}</h2>
-        <p className="text-sm text-slate-600 dark:text-neutral-400">
-          scans all active domains for papers from the last 7 days, scores them with gemini,
-          builds a fresh brief, and emails it to the recipient above. this can take a minute
-          or two (arxiv is queried politely, a few seconds per domain).
-        </p>
-        <button onClick={handleRunNow} disabled={runningBrief} className={primaryButtonClass}>
+        <button
+          onClick={handleRunNow}
+          disabled={runningBrief}
+          title="Scans active domains, scores with Gemini, emails the result. Takes 1-4 min."
+          className={primaryButtonClass}
+        >
           {runningBrief ? (
             <span className="inline-flex items-center gap-1">
               running
