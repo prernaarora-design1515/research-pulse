@@ -1,6 +1,6 @@
 const DOT_CLASS: Record<string, string> = {
-  high: "bg-accent",
-  medium: "bg-amber-500",
+  high: "bg-neutral-900 dark:bg-neutral-100",
+  medium: "bg-neutral-500",
   low: "bg-neutral-400 dark:bg-neutral-600",
 };
 

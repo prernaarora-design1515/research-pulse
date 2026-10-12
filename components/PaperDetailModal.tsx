@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect } from "react";
+import { createPortal } from "react-dom";
 import type { BriefItemView } from "@/lib/db/briefQueries";
 import PaperArt from "./PaperArt";
 import PaperActions from "./PaperActions";
@@ -36,9 +37,9 @@ export default function PaperDetailModal({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [item, onClose]);
 
-  if (!item) return null;
+  if (!item || typeof document === "undefined") return null;
 
-  return (
+  return createPortal(
     <div
       className="animate-fade-in-up fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-0 backdrop-blur-sm sm:p-4"
       onClick={onClose}
@@ -56,7 +57,7 @@ export default function PaperDetailModal({
         </button>
 
         <div className="flex flex-1 flex-col gap-5 overflow-y-auto p-6 sm:flex-row">
-          <div className="relative shrink-0 sm:w-40">
+          <div className="relative shrink-0 self-start sm:w-40">
             <PaperArt seed={item.paperId} alt={item.title} className="aspect-[3/4] w-full rounded-2xl" />
             <PriorityStamp priority={item.priority} className="absolute bottom-3 right-3" />
           </div>
@@ -103,6 +104,11 @@ export default function PaperDetailModal({
           />
         </div>
       </div>
-    </div>
+    </div>,
+    // Portaled to <body>: the sections that render this modal carry a
+    // leftover transform from their entrance animation, and a transformed
+    // ancestor would pin `position: fixed` to that section instead of the
+    // viewport -- the backdrop then only covered the content column.
+    document.body
   );
 }

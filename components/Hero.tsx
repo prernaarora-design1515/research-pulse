@@ -48,6 +48,9 @@ export default function Hero({
 
   function handlePriorityChanged(briefItemId: number, next: Priority) {
     setPriorityOverrides((prev) => ({ ...prev, [briefItemId]: next }));
+    setOpenItem((prev) =>
+      prev && prev.briefItemId === briefItemId ? { ...prev, priority: next } : prev
+    );
   }
 
   async function handleSendTestEmail(e: React.FormEvent) {
@@ -90,7 +93,7 @@ export default function Hero({
       </div>
 
       <div className="mt-6 grid grid-cols-3 gap-x-4 gap-y-1 font-mono text-[10px] uppercase text-[#121212] sm:grid-cols-5 dark:text-[#f1f1f1]">
-        {["Weekly", "arXiv", "Gemini", "Ranked", "Nothing hidden", `(${String(domainsCount).padStart(2, "0")})`, "Domains", "Live data", "Kavita", "Chooses"].map((t) => (
+        {["Weekly", "arXiv", "Gemini", "Ranked", "Nothing hidden", `(${String(domainsCount).padStart(2, "0")})`, "Domains", "Live data", "Kavita chooses"].map((t) => (
           <span key={t} className="w-fit transition-transform duration-200 hover:-translate-y-0.5 hover:rotate-[-2deg]">
             {t}
           </span>
