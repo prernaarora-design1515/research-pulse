@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import type { BriefItemView } from "@/lib/db/briefQueries";
 import PdfThumbnail from "./PdfThumbnail";
 
@@ -8,11 +8,14 @@ function pdfUrlFor(absUrl: string): string {
   return absUrl.replace("/abs/", "/pdf/");
 }
 
+const AUTO_SPEED = 40; // px/sec ambient drift
+const RESUME_DELAY_MS = 1200; // how long after manual input before autoplay resumes
+
 function PaperTile({ item, onOpen }: { item: BriefItemView; onOpen: () => void }) {
   return (
     <button
       onClick={onOpen}
-      className="group relative block w-56 shrink-0 snap-start overflow-hidden rounded-xl text-left sm:w-64"
+      className="group relative block w-56 shrink-0 overflow-hidden rounded-xl text-left sm:w-64"
     >
       <PdfThumbnail
         pdfUrl={pdfUrlFor(item.url)}
@@ -62,9 +65,76 @@ export default function PaperRow({
   onOpen: (item: BriefItemView) => void;
 }) {
   const scrollerRef = useRef<HTMLDivElement>(null);
+  const directionRef = useRef(1); // 1 = forward, -1 = backward
+  const resumeAtRef = useRef(0); // timestamp (ms) when autoplay may resume
+  const draggingRef = useRef(false);
+
+  useEffect(() => {
+    const el = scrollerRef.current;
+    if (!el) return;
+
+    function pauseAutoplay(ms = RESUME_DELAY_MS) {
+      resumeAtRef.current = performance.now() + ms;
+    }
+
+    function onWheel(e: WheelEvent) {
+      e.preventDefault();
+      el!.scrollLeft += e.deltaY + e.deltaX;
+      pauseAutoplay();
+    }
+
+    function onPointerDown() {
+      draggingRef.current = true;
+      pauseAutoplay(999999);
+    }
+    function onPointerUp() {
+      draggingRef.current = false;
+      pauseAutoplay();
+    }
+
+    el.addEventListener("wheel", onWheel, { passive: false });
+    el.addEventListener("touchstart", onPointerDown, { passive: true });
+    el.addEventListener("touchend", onPointerUp, { passive: true });
+    el.addEventListener("mousedown", onPointerDown);
+    window.addEventListener("mouseup", onPointerUp);
+
+    let raf: number;
+    let last = performance.now();
+
+    function tick(now: number) {
+      const dt = Math.min((now - last) / 1000, 0.05);
+      last = now;
+
+      if (now >= resumeAtRef.current && !draggingRef.current && el) {
+        const max = el.scrollWidth - el.clientWidth;
+        if (max > 0) {
+          el.scrollLeft += AUTO_SPEED * directionRef.current * dt;
+          if (el.scrollLeft >= max) {
+            el.scrollLeft = max;
+            directionRef.current = -1;
+          } else if (el.scrollLeft <= 0) {
+            el.scrollLeft = 0;
+            directionRef.current = 1;
+          }
+        }
+      }
+      raf = requestAnimationFrame(tick);
+    }
+    raf = requestAnimationFrame(tick);
+
+    return () => {
+      cancelAnimationFrame(raf);
+      el.removeEventListener("wheel", onWheel);
+      el.removeEventListener("touchstart", onPointerDown);
+      el.removeEventListener("touchend", onPointerUp);
+      el.removeEventListener("mousedown", onPointerDown);
+      window.removeEventListener("mouseup", onPointerUp);
+    };
+  }, [items]);
 
   function scrollBy(amount: number) {
     scrollerRef.current?.scrollBy({ left: amount, behavior: "smooth" });
+    resumeAtRef.current = performance.now() + RESUME_DELAY_MS;
   }
 
   if (items.length === 0) {
@@ -80,7 +150,7 @@ export default function PaperRow({
       <ArrowButton direction="left" onClick={() => scrollBy(-320)} />
       <div
         ref={scrollerRef}
-        className="flex flex-1 snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+        className="flex flex-1 gap-4 overflow-x-auto pb-2 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
       >
         {items.map((item) => (
           <PaperTile key={item.paperId} item={item} onOpen={() => onOpen(item)} />
