@@ -4,7 +4,7 @@ import { useEffect } from "react";
 import type { BriefItemView } from "@/lib/db/briefQueries";
 import PdfThumbnail from "./PdfThumbnail";
 import PaperActions from "./PaperActions";
-import PriorityDropdown from "./PriorityDropdown";
+import PriorityDropdown, { type Priority } from "./PriorityDropdown";
 
 function pdfUrlFor(absUrl: string): string {
   return absUrl.replace("/abs/", "/pdf/");
@@ -14,10 +14,12 @@ export default function PaperDetailModal({
   item,
   allTags,
   onClose,
+  onPriorityChanged,
 }: {
   item: BriefItemView | null;
   allTags: string[];
   onClose: () => void;
+  onPriorityChanged?: (briefItemId: number, next: Priority) => void;
 }) {
   useEffect(() => {
     if (!item) return;
@@ -36,24 +38,32 @@ export default function PaperDetailModal({
 
   return (
     <div
-      className="animate-fade-in-up fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4 backdrop-blur-sm"
+      className="animate-fade-in-up fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-0 backdrop-blur-sm sm:p-4"
       onClick={onClose}
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="flex max-h-[85vh] w-full max-w-3xl flex-col overflow-hidden border-2 border-slate-900 bg-white shadow-[8px_8px_0_0_var(--color-accent)] dark:border-neutral-100 dark:bg-neutral-900"
+        className="relative flex h-full w-full max-w-3xl flex-col overflow-hidden border-0 border-slate-900 bg-white shadow-[8px_8px_0_0_var(--color-accent)] sm:h-auto sm:max-h-[85vh] sm:border-2 dark:border-neutral-100 dark:bg-neutral-900"
       >
-        <div className="flex items-start gap-4 overflow-y-auto p-6">
+        <button
+          onClick={onClose}
+          aria-label="Close"
+          className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center border-2 border-slate-900 bg-white text-lg font-bold leading-none text-slate-900 transition-all hover:bg-slate-900 hover:text-white dark:border-neutral-100 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-100 dark:hover:text-neutral-900"
+        >
+          ×
+        </button>
+
+        <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-6 pt-14 sm:flex-row sm:pt-6">
           <PdfThumbnail
             pdfUrl={pdfUrlFor(item.url)}
             alt={item.title}
-            className="aspect-[3/4] w-28 shrink-0 border-2 border-slate-900 dark:border-neutral-100 sm:w-36"
+            className="aspect-[3/4] w-full shrink-0 border-2 border-slate-900 dark:border-neutral-100 sm:w-36"
           />
           <div className="min-w-0 flex-1">
             <p className="text-[11px] font-medium uppercase tracking-wider text-accent">
               {item.selectionReason} &middot; score {item.significanceScore}/10
             </p>
-            <h2 className="mt-1 font-display text-2xl font-semibold leading-snug text-slate-900 dark:text-neutral-100">
+            <h2 className="mt-1 break-words font-display text-xl font-semibold leading-snug text-slate-900 dark:text-neutral-100 sm:text-2xl">
               {item.title}
             </h2>
             <p className="mt-1 text-sm text-slate-500 dark:text-neutral-500">
@@ -84,7 +94,11 @@ export default function PaperDetailModal({
             initialTags={item.tags}
             allTags={allTags}
           />
-          <PriorityDropdown briefItemId={item.briefItemId} initialPriority={item.priority} />
+          <PriorityDropdown
+            briefItemId={item.briefItemId}
+            initialPriority={item.priority}
+            onChanged={(next) => onPriorityChanged?.(item.briefItemId, next)}
+          />
         </div>
       </div>
     </div>

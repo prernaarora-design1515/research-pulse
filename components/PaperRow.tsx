@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import type { BriefItemView } from "@/lib/db/briefQueries";
 import PdfThumbnail from "./PdfThumbnail";
+import PriorityBadge from "./PriorityBadge";
 
 function pdfUrlFor(absUrl: string): string {
   return absUrl.replace("/abs/", "/pdf/");
@@ -23,6 +24,10 @@ function PaperTile({ item, onOpen }: { item: BriefItemView; onOpen: () => void }
         className="aspect-[4/5] w-full transition-transform duration-300 ease-out group-hover:scale-[1.03]"
       />
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent" />
+      <PriorityBadge
+        priority={item.priority}
+        className="pointer-events-none absolute right-2 top-2 border border-white/30 bg-black/50 px-1.5 py-0.5 text-white backdrop-blur-sm"
+      />
       <div className="pointer-events-none absolute inset-x-0 bottom-0 p-3">
         <p className="text-[10px] font-medium uppercase tracking-wider text-emerald-300">
           {item.selectionReason}
