@@ -1,4 +1,4 @@
-import { desc, eq, inArray } from "drizzle-orm";
+import { desc, eq, inArray, and } from "drizzle-orm";
 import { db } from "./client";
 import { briefs, briefItems, papers, domains, bookmarks } from "./schema";
 import type { RunSummary } from "../pipeline";
@@ -38,13 +38,59 @@ export type BriefDetail = {
   domains: BriefDomainView[];
 };
 
-export async function getLatestBriefId(): Promise<number | null> {
+async function getAbsoluteLatestBriefId(): Promise<number | null> {
   const [row] = await db
     .select({ id: briefs.id })
     .from(briefs)
     .orderBy(desc(briefs.createdAt))
     .limit(1);
   return row?.id ?? null;
+}
+
+/**
+ * Picks which brief the homepage should show. Prefers the most recent run
+ * that actually surfaced papers over the literal latest attempt, so a run
+ * that came back empty (e.g. an AI-provider quota failure) doesn't bury a
+ * good brief behind a blank page. Also reports whether a newer, empty run
+ * exists so the UI can be transparent about it rather than silently
+ * reordering history.
+ */
+export async function getHomepageBrief(): Promise<{
+  id: number | null;
+  isFallback: boolean;
+  newerEmptyRunAt: string | null;
+}> {
+  const [withResults] = await db
+    .selectDistinct({ id: briefs.id, createdAt: briefs.createdAt })
+    .from(briefs)
+    .innerJoin(
+      briefItems,
+      and(eq(briefItems.briefId, briefs.id), eq(briefItems.isSelected, true))
+    )
+    .orderBy(desc(briefs.createdAt))
+    .limit(1);
+
+  const absoluteLatestId = await getAbsoluteLatestBriefId();
+
+  if (!withResults) {
+    return { id: absoluteLatestId, isFallback: false, newerEmptyRunAt: null };
+  }
+
+  if (absoluteLatestId === withResults.id) {
+    return { id: withResults.id, isFallback: false, newerEmptyRunAt: null };
+  }
+
+  const [newer] = await db
+    .select({ createdAt: briefs.createdAt })
+    .from(briefs)
+    .where(eq(briefs.id, absoluteLatestId!))
+    .limit(1);
+
+  return {
+    id: withResults.id,
+    isFallback: true,
+    newerEmptyRunAt: newer?.createdAt.toISOString() ?? null,
+  };
 }
 
 export async function listBriefs() {

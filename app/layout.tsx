@@ -3,19 +3,13 @@ import Link from "next/link";
 import ThemeScript from "@/components/ThemeScript";
 import ThemeToggle from "@/components/ThemeToggle";
 import LiveClock from "@/components/LiveClock";
+import NavLinks from "@/components/NavLinks";
 import "./globals.css";
 
 export const metadata: Metadata = {
   title: "Research Pulse",
   description: "Weekly AI/ML research brief, scanned, scored and summarised by domain.",
 };
-
-const NAV_ITEMS = [
-  { href: "/", label: "Brief" },
-  { href: "/archive", label: "Archive" },
-  { href: "/saved", label: "Saved" },
-  { href: "/settings", label: "Settings" },
-];
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
@@ -32,17 +26,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
             >
               Research Pulse
             </Link>
-            <div className="flex flex-wrap items-center gap-x-5 gap-y-1 text-sm text-slate-500 dark:text-neutral-400">
-              {NAV_ITEMS.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className="relative py-1 transition-colors hover:text-slate-900 dark:hover:text-neutral-100"
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </div>
+            <NavLinks />
             <div className="flex items-center gap-3">
               <LiveClock />
               <ThemeToggle />
