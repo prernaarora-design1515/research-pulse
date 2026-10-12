@@ -41,13 +41,13 @@ export default function PaperDetailModal({
     >
       <div
         onClick={(e) => e.stopPropagation()}
-        className="flex max-h-[85vh] w-full max-w-3xl flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-2xl dark:border-neutral-800 dark:bg-neutral-900"
+        className="flex max-h-[85vh] w-full max-w-3xl flex-col overflow-hidden border-2 border-slate-900 bg-white shadow-[8px_8px_0_0_var(--color-accent)] dark:border-neutral-100 dark:bg-neutral-900"
       >
         <div className="flex items-start gap-4 overflow-y-auto p-6">
           <PdfThumbnail
             pdfUrl={pdfUrlFor(item.url)}
             alt={item.title}
-            className="aspect-[3/4] w-28 shrink-0 rounded-lg sm:w-36"
+            className="aspect-[3/4] w-28 shrink-0 border-2 border-slate-900 dark:border-neutral-100 sm:w-36"
           />
           <div className="min-w-0 flex-1">
             <p className="text-[11px] font-medium uppercase tracking-wider text-accent">

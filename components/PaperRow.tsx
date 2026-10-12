@@ -15,7 +15,7 @@ function PaperTile({ item, onOpen }: { item: BriefItemView; onOpen: () => void }
   return (
     <button
       onClick={onOpen}
-      className="group relative block w-56 shrink-0 overflow-hidden rounded-xl text-left sm:w-64"
+      className="group relative block w-56 shrink-0 overflow-hidden border-2 border-slate-900 text-left transition-shadow duration-300 hover:shadow-[5px_5px_0_0_var(--color-accent)] dark:border-neutral-100 sm:w-64"
     >
       <PdfThumbnail
         pdfUrl={pdfUrlFor(item.url)}
@@ -50,7 +50,7 @@ function ArrowButton({
     <button
       onClick={onClick}
       aria-label={direction === "left" ? "Scroll left" : "Scroll right"}
-      className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-600 transition-colors hover:border-accent hover:text-accent dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-400"
+      className="flex h-8 w-8 shrink-0 items-center justify-center border-2 border-slate-900 bg-white text-slate-900 transition-all hover:bg-slate-900 hover:text-white dark:border-neutral-100 dark:bg-neutral-900 dark:text-neutral-100 dark:hover:bg-neutral-100 dark:hover:text-neutral-900"
     >
       {direction === "left" ? "←" : "→"}
     </button>

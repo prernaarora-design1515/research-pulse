@@ -12,11 +12,15 @@ function pdfUrlFor(absUrl: string): string {
   return absUrl.replace("/abs/", "/pdf/");
 }
 
+// Index 0-3 are the visible stack depths (front to back). Index 4 is the
+// "parked" state — just past the back of the stack, invisible — so a card
+// cycling back into view eases in from there instead of popping in place.
 const DEPTH_STYLE = [
   { x: 0, y: 0, rotate: -1.5, scale: 1, opacity: 1 },
-  { x: 18, y: 14, rotate: 4, scale: 0.96, opacity: 0.92 },
-  { x: -16, y: 26, rotate: -6, scale: 0.92, opacity: 0.8 },
-  { x: 12, y: 38, rotate: 5, scale: 0.88, opacity: 0.65 },
+  { x: 20, y: 16, rotate: 4, scale: 0.96, opacity: 0.9 },
+  { x: -18, y: 30, rotate: -6, scale: 0.92, opacity: 0.78 },
+  { x: 14, y: 44, rotate: 5, scale: 0.88, opacity: 0.6 },
+  { x: 14, y: 54, rotate: 6, scale: 0.84, opacity: 0 },
 ];
 
 function FlashCard({
@@ -38,13 +42,15 @@ function FlashCard({
       aria-hidden={!interactive}
       style={{
         transform: `translate(${d.x}px, ${d.y}px) rotate(${d.rotate}deg) scale(${d.scale})`,
-        zIndex: 40 - depth * 10,
+        zIndex: 40 - Math.min(depth, 4) * 10,
         opacity: d.opacity,
+        transitionDuration: "550ms",
+        transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
       }}
-      className={`absolute inset-0 overflow-hidden rounded-sm border-2 border-white/15 text-left shadow-2xl transition-all duration-500 ease-out ${
+      className={`absolute inset-0 overflow-hidden border-2 border-white/15 text-left transition-[transform,opacity,box-shadow] ${
         interactive
-          ? "cursor-pointer hover:-translate-y-1 hover:rotate-0 hover:shadow-[0_0_0_3px_var(--color-accent)]"
-          : "pointer-events-none"
+          ? "cursor-pointer shadow-2xl hover:-translate-y-1 hover:rotate-0 hover:shadow-[0_0_0_3px_var(--color-accent)]"
+          : "pointer-events-none shadow-xl"
       }`}
     >
       <PdfThumbnail pdfUrl={pdfUrlFor(item.url)} alt={item.title} className="absolute inset-0 h-full w-full grayscale-[25%]" />
@@ -74,6 +80,27 @@ function FlashCard({
   );
 }
 
+function StackNavButton({
+  direction,
+  onClick,
+  disabled,
+}: {
+  direction: "prev" | "next";
+  onClick: () => void;
+  disabled: boolean;
+}) {
+  return (
+    <button
+      onClick={onClick}
+      disabled={disabled}
+      aria-label={direction === "prev" ? "Previous headline" : "Next headline"}
+      className="flex h-9 w-9 items-center justify-center border-2 border-slate-900 text-slate-900 transition-all hover:bg-slate-900 hover:text-white active:scale-90 disabled:opacity-30 disabled:hover:bg-transparent disabled:hover:text-slate-900 dark:border-neutral-100 dark:text-neutral-100 dark:hover:bg-neutral-100 dark:hover:text-neutral-900 dark:disabled:hover:text-neutral-100"
+    >
+      {direction === "prev" ? "←" : "→"}
+    </button>
+  );
+}
+
 export default function Hero({
   items,
   domainsCount,
@@ -85,19 +112,18 @@ export default function Hero({
 }) {
   const [base, setBase] = useState(0);
   const [openItem, setOpenItem] = useState<BriefItemView | null>(null);
-  const [shuffling, setShuffling] = useState(false);
+  const n = items.length;
 
-  function shuffle() {
-    setShuffling(true);
-    setBase((b) => (b + 1) % items.length);
-    setTimeout(() => setShuffling(false), 260);
+  function next() {
+    setBase((b) => (b + 1) % n);
+  }
+  function prev() {
+    setBase((b) => (b - 1 + n) % n);
   }
 
   function scrollToBrief() {
     document.getElementById("brief")?.scrollIntoView({ behavior: "smooth" });
   }
-
-  const visible = items.length === 0 ? [] : items.map((_, i) => items[(base + i) % items.length]).slice(0, 4);
 
   return (
     <section className="animate-fade-in-up py-4 lg:py-8">
@@ -125,7 +151,7 @@ export default function Hero({
           <div className="flex flex-wrap items-center gap-5">
             <button
               onClick={scrollToBrief}
-              className="rounded-none bg-slate-900 px-6 py-3 text-xs font-semibold uppercase tracking-[0.15em] text-white transition-all hover:bg-accent active:scale-95 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-accent dark:hover:text-white"
+              className="bg-slate-900 px-6 py-3 text-xs font-semibold uppercase tracking-[0.15em] text-white transition-all hover:bg-accent active:scale-95 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-accent dark:hover:text-white"
             >
               Explore this week&rsquo;s brief
             </button>
@@ -139,31 +165,28 @@ export default function Hero({
           </div>
         </div>
 
-        {visible.length > 0 && (
+        {n > 0 && (
           <div className="flex flex-col items-center gap-4">
-            <div
-              className={`relative h-72 w-full max-w-xs sm:h-80 sm:max-w-sm ${shuffling ? "animate-pop" : ""}`}
-            >
-              {visible.map((item, i) => (
-                <FlashCard
-                  key={`${item.paperId}-${base}-${i}`}
-                  item={item}
-                  depth={i}
-                  onOpen={() => setOpenItem(item)}
-                />
-              ))}
+            <div className="relative h-72 w-full max-w-xs sm:h-80 sm:max-w-sm">
+              {items.map((item, i) => {
+                const depth = (i - base + n) % n;
+                if (depth > 4) return null;
+                return (
+                  <FlashCard
+                    key={item.paperId}
+                    item={item}
+                    depth={depth}
+                    onOpen={() => setOpenItem(item)}
+                  />
+                );
+              })}
             </div>
-            <div className="flex items-center gap-3">
-              <button
-                onClick={shuffle}
-                disabled={items.length < 2}
-                className="flex items-center gap-1.5 rounded-none border border-slate-900 px-3 py-1.5 text-[10px] font-semibold uppercase tracking-[0.15em] text-slate-700 transition-colors hover:border-accent hover:text-accent disabled:opacity-40 dark:border-neutral-100 dark:text-neutral-300"
-              >
-                Shuffle Headlines ↻
-              </button>
-              <span className="text-[10px] uppercase tracking-wider text-slate-400 dark:text-neutral-600">
-                best pick per domain
+            <div className="flex items-center gap-4">
+              <StackNavButton direction="prev" onClick={prev} disabled={n < 2} />
+              <span className="w-12 text-center text-[10px] uppercase tracking-wider text-slate-400 tabular-nums dark:text-neutral-600">
+                {base + 1} / {n}
               </span>
+              <StackNavButton direction="next" onClick={next} disabled={n < 2} />
             </div>
           </div>
         )}

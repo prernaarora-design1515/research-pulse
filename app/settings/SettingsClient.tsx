@@ -19,10 +19,10 @@ const emptyForm = {
 };
 
 const inputClass =
-  "w-full rounded-lg border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 transition-colors focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100";
+  "w-full border-2 border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 transition-colors focus:border-accent focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100";
 
 const primaryButtonClass =
-  "rounded-lg bg-slate-900 px-4 py-2 text-sm font-medium text-white transition-all hover:bg-accent active:scale-95 disabled:opacity-50 disabled:active:scale-100 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-accent dark:hover:text-accent-foreground";
+  "bg-slate-900 px-4 py-2 text-xs font-semibold uppercase tracking-[0.1em] text-white transition-all hover:bg-accent active:scale-95 disabled:opacity-50 disabled:active:scale-100 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-accent dark:hover:text-accent-foreground";
 
 export default function SettingsClient({
   initialDomains,
@@ -173,7 +173,7 @@ export default function SettingsClient({
 
       <section className="space-y-3">
         <h2 className="text-sm font-medium text-slate-500 dark:text-neutral-400">Domains</h2>
-        <div className="divide-y divide-slate-200 rounded-xl border border-slate-200 bg-white dark:divide-neutral-800 dark:border-neutral-800 dark:bg-neutral-900">
+        <div className="divide-y divide-slate-200 border-2 border-slate-200 bg-white dark:divide-neutral-800 dark:border-neutral-800 dark:bg-neutral-900">
           {domainsList.length === 0 && (
             <p className="p-4 text-sm text-slate-500 dark:text-neutral-500">
               No domains yet. Add one below.
@@ -219,7 +219,7 @@ export default function SettingsClient({
 
         <form
           onSubmit={handleAddDomain}
-          className="space-y-3 rounded-xl border border-slate-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900"
+          className="space-y-3 border-2 border-slate-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900"
         >
           <h3 className="font-medium text-slate-800 dark:text-neutral-200">Add a domain</h3>
           <div className="grid gap-3 sm:grid-cols-2">

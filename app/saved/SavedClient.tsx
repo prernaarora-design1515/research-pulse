@@ -99,13 +99,13 @@ export default function SavedClient({ initialBookmarks }: { initialBookmarks: Bo
         {filtered.map((b, i) => (
           <div
             key={b.id}
-            className="animate-fade-in-up group flex gap-4 overflow-hidden rounded-xl border border-slate-200 bg-white p-3 transition-all hover:-translate-y-0.5 hover:border-accent/50 hover:shadow-lg dark:border-neutral-800 dark:bg-neutral-900"
+            className="animate-fade-in-up group flex gap-4 overflow-hidden border-2 border-slate-200 bg-white p-3 transition-all hover:-translate-y-0.5 hover:border-slate-900 hover:shadow-[4px_4px_0_0_var(--color-accent)] dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-neutral-100"
             style={{ animationDelay: `${Math.min(i, 10) * 40}ms` }}
           >
             <PdfThumbnail
               pdfUrl={pdfUrlFor(b.url)}
               alt={b.title}
-              className="aspect-[3/4] w-20 shrink-0 rounded-lg sm:w-24"
+              className="aspect-[3/4] w-20 shrink-0 border border-slate-300 dark:border-neutral-700 sm:w-24"
             />
             <div className="min-w-0 flex-1">
               <div className="flex items-start justify-between gap-3">
@@ -134,11 +134,11 @@ export default function SavedClient({ initialBookmarks }: { initialBookmarks: Bo
                   defaultValue={b.tags.join(", ")}
                   placeholder="tags, comma-separated"
                   onChange={(e) => setTagDrafts((prev) => ({ ...prev, [b.id]: e.target.value }))}
-                  className="flex-1 rounded-lg border border-slate-300 bg-white px-2 py-1 text-xs text-slate-900 transition-colors focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
+                  className="flex-1 border-2 border-slate-300 bg-white px-2 py-1 text-xs text-slate-900 transition-colors focus:border-accent focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
                 />
                 <button
                   onClick={() => saveTags(b)}
-                  className="rounded-lg bg-slate-900 px-3 py-1 text-xs font-medium text-white transition-all hover:bg-accent active:scale-95 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-accent dark:hover:text-accent-foreground"
+                  className="bg-slate-900 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-white transition-all hover:bg-accent active:scale-95 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-accent dark:hover:text-accent-foreground"
                 >
                   Save tags
                 </button>

@@ -37,7 +37,7 @@ export default async function HomePage() {
 
       <div id="brief" className="scroll-mt-20 space-y-4">
         {isFallback && newerEmptyRunAt && (
-          <p className="rounded-lg border border-amber-200 bg-amber-50 px-4 py-2 text-xs text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-300">
+          <p className="border-2 border-amber-300 bg-amber-50 px-4 py-2 text-xs text-amber-800 dark:border-amber-500/30 dark:bg-amber-500/10 dark:text-amber-300">
             A more recent run ({new Date(newerEmptyRunAt).toISOString().slice(0, 10)}) found
             nothing — likely an AI provider error, not a quiet week. Showing the last brief with
             results instead. See the full history in{" "}
