@@ -127,13 +127,13 @@ export default function SettingsClient({
 
   return (
     <div className="animate-fade-in-up space-y-10">
-      <h1 className="font-display text-4xl font-black uppercase tracking-tight text-slate-900 dark:text-neutral-100">
+      <h1 className="font-display text-4xl font-black italic tracking-tight text-slate-900 dark:text-neutral-100">
         Settings
       </h1>
 
       <Reveal>
-      <section className="space-y-3">
-        <h2 className="text-sm font-medium text-slate-500 dark:text-neutral-400">
+      <section className="space-y-3 border-t-2 border-slate-900 pt-6 dark:border-neutral-100">
+        <h2 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400 dark:text-neutral-600">
           Recipient email
         </h2>
         <form onSubmit={handleSaveEmail} className="flex max-w-md gap-2">
@@ -158,8 +158,8 @@ export default function SettingsClient({
       </Reveal>
 
       <Reveal delay={80}>
-      <section className="space-y-3">
-        <h2 className="text-sm font-medium text-slate-500 dark:text-neutral-400">Run now</h2>
+      <section className="space-y-3 border-t-2 border-slate-900 pt-6 dark:border-neutral-100">
+        <h2 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400 dark:text-neutral-600">Run now</h2>
         <button
           onClick={handleRunNow}
           disabled={runningBrief}
@@ -177,8 +177,8 @@ export default function SettingsClient({
       </Reveal>
 
       <Reveal delay={160}>
-      <section className="space-y-3">
-        <h2 className="text-sm font-medium text-slate-500 dark:text-neutral-400">Domains</h2>
+      <section className="space-y-3 border-t-2 border-slate-900 pt-6 dark:border-neutral-100">
+        <h2 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400 dark:text-neutral-600">Domains</h2>
         <div className="divide-y divide-slate-200 border-2 border-slate-200 bg-white dark:divide-neutral-800 dark:border-neutral-800 dark:bg-neutral-900">
           {domainsList.length === 0 && (
             <p className="p-4 text-sm text-slate-500 dark:text-neutral-500">

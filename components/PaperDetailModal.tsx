@@ -2,13 +2,9 @@
 
 import { useEffect } from "react";
 import type { BriefItemView } from "@/lib/db/briefQueries";
-import PdfThumbnail from "./PdfThumbnail";
+import PaperArt from "./PaperArt";
 import PaperActions from "./PaperActions";
 import PriorityDropdown, { type Priority } from "./PriorityDropdown";
-
-function pdfUrlFor(absUrl: string): string {
-  return absUrl.replace("/abs/", "/pdf/");
-}
 
 export default function PaperDetailModal({
   item,
@@ -54,8 +50,8 @@ export default function PaperDetailModal({
         </button>
 
         <div className="flex flex-1 flex-col gap-4 overflow-y-auto p-6 pt-14 sm:flex-row sm:pt-6">
-          <PdfThumbnail
-            pdfUrl={pdfUrlFor(item.url)}
+          <PaperArt
+            seed={item.paperId}
             alt={item.title}
             className="aspect-[3/4] w-full shrink-0 border-2 border-slate-900 dark:border-neutral-100 sm:w-36"
           />
