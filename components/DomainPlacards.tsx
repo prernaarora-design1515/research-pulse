@@ -4,6 +4,7 @@ export type PlacardDomain = {
   domainId: number;
   domainName: string;
   count: number;
+  isUnscored?: boolean;
 };
 
 export default function DomainPlacards({
@@ -32,10 +33,15 @@ export default function DomainPlacards({
             {d.domainName}
             <span
               className={`rounded-full px-1.5 py-0.5 text-xs ${
-                active
-                  ? "bg-white/20"
-                  : "bg-slate-100 text-slate-500 group-hover:bg-slate-200 dark:bg-neutral-800 dark:text-neutral-500"
+                d.isUnscored && d.count > 0
+                  ? active
+                    ? "border border-white/40 text-white/80"
+                    : "border border-slate-300 text-slate-400 dark:border-neutral-700 dark:text-neutral-500"
+                  : active
+                    ? "bg-white/20"
+                    : "bg-slate-100 text-slate-500 group-hover:bg-slate-200 dark:bg-neutral-800 dark:text-neutral-500"
               }`}
+              title={d.isUnscored && d.count > 0 ? "Scanned, not yet AI-scored" : "AI-selected papers"}
             >
               {d.count}
             </span>

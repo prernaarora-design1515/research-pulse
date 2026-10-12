@@ -15,6 +15,10 @@ export default function BriefView({
   allTags: string[];
 }) {
   const totalShown = brief.domains.reduce((sum, d) => sum + d.selected.length, 0);
+  const totalUnscored = brief.domains.reduce(
+    (sum, d) => sum + (d.selected.length === 0 ? d.filteredOut.length : 0),
+    0
+  );
   const [activeId, setActiveId] = useState(brief.domains[0]?.domainId);
   const activeDomain = brief.domains.find((d) => d.domainId === activeId) ?? brief.domains[0];
   const [openItem, setOpenItem] = useState<BriefItemView | null>(null);
@@ -33,7 +37,8 @@ export default function BriefView({
           Week of {brief.weekStart}
         </h1>
         <p className="mt-2 text-sm text-slate-500 dark:text-neutral-500">
-          {brief.papersScanned} scanned &middot; {totalShown} surfaced &middot;{" "}
+          {brief.papersScanned} scanned &middot; {totalShown} AI-surfaced
+          {totalUnscored > 0 && ` (+${totalUnscored} shown unscored)`} &middot;{" "}
           {brief.domains.length} domains
         </p>
       </div>
@@ -44,7 +49,8 @@ export default function BriefView({
             domains={brief.domains.map((d) => ({
               domainId: d.domainId,
               domainName: d.domainName,
-              count: d.selected.length,
+              count: d.selected.length > 0 ? d.selected.length : d.filteredOut.length,
+              isUnscored: d.selected.length === 0,
             }))}
             activeId={activeDomain.domainId}
             onSelect={setActiveId}
