@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { Scribble } from "./Motion";
 
 const NAV_ITEMS = [
   { href: "/", label: "Brief" },
@@ -21,16 +22,16 @@ export default function NavLinks() {
           <Link
             key={item.href}
             href={item.href}
-            className={`relative py-1 transition-colors ${
+            className={`group relative py-1 transition-colors ${
               active
                 ? "font-medium text-accent"
                 : "text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100"
             }`}
           >
-            {item.label}
-            {active && (
-              <span className="absolute -bottom-[1px] left-0 h-[2px] w-full bg-accent" />
-            )}
+            <span className="inline-block transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:-rotate-2">
+              {item.label}
+            </span>
+            <Scribble on={active} />
           </Link>
         );
       })}
