@@ -98,8 +98,19 @@ export async function PATCH(req: NextRequest) {
     : eq(bookmarks.paperId, paperId as number);
 
   const [row] = await db.update(bookmarks).set(updates).where(whereClause).returning();
-  if (!row) return NextResponse.json({ error: "Bookmark not found" }, { status: 404 });
-  return NextResponse.json(row);
+  if (row) return NextResponse.json(row);
+
+  // Taking a note on a paper that isn't bookmarked yet is itself a reason to
+  // keep it around -- create the bookmark rather than 404ing on the user.
+  if (!Number.isInteger(id) && Number.isInteger(paperId)) {
+    const [created] = await db
+      .insert(bookmarks)
+      .values({ paperId: paperId as number, tags: updates.tags ?? [], note: updates.note ?? null })
+      .returning();
+    return NextResponse.json(created, { status: 201 });
+  }
+
+  return NextResponse.json({ error: "Bookmark not found" }, { status: 404 });
 }
 
 export async function DELETE(req: NextRequest) {
