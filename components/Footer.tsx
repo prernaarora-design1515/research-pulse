@@ -17,7 +17,7 @@ export default function Footer() {
     <footer className="border-t-2 border-slate-900 dark:border-neutral-100">
       <div className="mx-auto grid max-w-5xl grid-cols-1 gap-10 px-5 py-12 sm:px-8 md:grid-cols-4">
         <div className="md:col-span-2">
-          <p className="font-display text-2xl font-black uppercase leading-tight tracking-tight text-slate-900 dark:text-neutral-100">
+          <p className="font-display text-3xl font-black italic leading-tight tracking-tight text-slate-900 dark:text-neutral-100">
             An AI system that narrows your weekly research reading.
           </p>
           <p className="mt-3 max-w-sm text-sm text-slate-500 dark:text-neutral-500">
@@ -68,7 +68,7 @@ export default function Footer() {
       </div>
 
       <div className="overflow-hidden border-t border-slate-200 py-2 dark:border-neutral-800">
-        <p className="select-none whitespace-nowrap text-center font-display text-[18vw] font-black uppercase leading-none tracking-tighter text-slate-900/[0.06] dark:text-neutral-100/[0.06]">
+        <p className="select-none whitespace-nowrap text-center font-display text-[16vw] font-black italic leading-none tracking-tighter text-slate-900/[0.06] dark:text-neutral-100/[0.06]">
           Research Pulse
         </p>
       </div>

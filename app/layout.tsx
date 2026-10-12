@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Fraunces, Inter } from "next/font/google";
+import { Bodoni_Moda, Inter } from "next/font/google";
 import Link from "next/link";
 import ThemeScript from "@/components/ThemeScript";
 import ThemeToggle from "@/components/ThemeToggle";
@@ -9,10 +9,10 @@ import CursorBlob from "@/components/CursorBlob";
 import Footer from "@/components/Footer";
 import "./globals.css";
 
-const fraunces = Fraunces({
+const bodoni = Bodoni_Moda({
   subsets: ["latin"],
   variable: "--font-display",
-  weight: ["400", "500", "600", "900"],
+  weight: ["400", "500", "600", "700", "800", "900"],
   style: ["normal", "italic"],
   display: "swap",
 });
@@ -32,7 +32,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`h-full antialiased ${fraunces.variable} ${inter.variable}`}
+      className={`h-full antialiased ${bodoni.variable} ${inter.variable}`}
       suppressHydrationWarning
     >
       <head>
@@ -48,7 +48,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           <nav className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-x-6 gap-y-2 px-5 py-4 sm:px-8">
             <Link
               href="/"
-              className="font-display text-xl font-black uppercase tracking-tight text-slate-900 dark:text-neutral-100"
+              className="font-display text-xl font-black italic tracking-tight text-slate-900 dark:text-neutral-100"
             >
               Research Pulse
             </Link>

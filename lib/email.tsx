@@ -84,3 +84,30 @@ export async function sendBriefEmail(briefId: number): Promise<void> {
     throw new Error(`Resend failed: ${error.message}`);
   }
 }
+
+// Standalone from the weekly pipeline and the recipient_email setting --
+// lets anyone confirm the email pipeline actually works by sending
+// themselves a one-off test message, without touching who gets the real
+// weekly brief.
+export async function sendTestEmail(toEmail: string): Promise<void> {
+  const apiKey = process.env.RESEND_API_KEY;
+  const from = process.env.EMAIL_FROM;
+  if (!apiKey || !from) {
+    throw new Error("RESEND_API_KEY and EMAIL_FROM must be set to send email");
+  }
+
+  const resend = new Resend(apiKey);
+  const { error } = await resend.emails.send({
+    from,
+    to: toEmail,
+    subject: "Research Pulse — test email",
+    html: `<p>This confirms Research Pulse's email pipeline is working.</p>
+      <p>Every Monday, the real weekly brief goes out the same way, to whatever
+      address is set as the recipient in Settings.</p>
+      <p>— The system narrows. Kavita chooses.</p>`,
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+}

@@ -2,12 +2,8 @@
 
 import { useState } from "react";
 import type { BriefItemView } from "@/lib/db/briefQueries";
-import PdfThumbnail from "./PdfThumbnail";
+import PaperArt from "./PaperArt";
 import PriorityBadge from "./PriorityBadge";
-
-function pdfUrlFor(absUrl: string): string {
-  return absUrl.replace("/abs/", "/pdf/");
-}
 
 export default function FilteredOutList({
   items,
@@ -53,8 +49,8 @@ export default function FilteredOutList({
                 className="animate-fade-in-up group flex gap-3 border-2 border-slate-200 bg-white p-2.5 text-left transition-all hover:-translate-y-0.5 hover:border-slate-900 hover:shadow-[3px_3px_0_0_var(--color-accent)] dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-neutral-100"
                 style={{ animationDelay: open ? `${Math.min(i, 12) * 30}ms` : "0ms" }}
               >
-                <PdfThumbnail
-                  pdfUrl={pdfUrlFor(item.url)}
+                <PaperArt
+                  seed={item.paperId}
                   alt={item.title}
                   className="aspect-[3/4] w-12 shrink-0 border border-slate-300 dark:border-neutral-700"
                 />

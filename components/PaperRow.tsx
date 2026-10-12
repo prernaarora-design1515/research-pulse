@@ -2,12 +2,8 @@
 
 import { useEffect, useRef } from "react";
 import type { BriefItemView } from "@/lib/db/briefQueries";
-import PdfThumbnail from "./PdfThumbnail";
+import PaperArt from "./PaperArt";
 import PriorityBadge from "./PriorityBadge";
-
-function pdfUrlFor(absUrl: string): string {
-  return absUrl.replace("/abs/", "/pdf/");
-}
 
 const AUTO_SPEED = 40; // px/sec ambient drift
 const RESUME_DELAY_MS = 1200; // how long after manual input before autoplay resumes
@@ -18,11 +14,7 @@ function PaperTile({ item, onOpen }: { item: BriefItemView; onOpen: () => void }
       onClick={onOpen}
       className="group relative block w-56 shrink-0 overflow-hidden border-2 border-slate-900 text-left transition-shadow duration-300 hover:shadow-[5px_5px_0_0_var(--color-accent)] dark:border-neutral-100 sm:w-64"
     >
-      <PdfThumbnail
-        pdfUrl={pdfUrlFor(item.url)}
-        alt={item.title}
-        className="aspect-[4/5] w-full transition-transform duration-300 ease-out group-hover:scale-[1.03]"
-      />
+      <PaperArt seed={item.paperId} alt={item.title} className="aspect-[4/5] w-full" />
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/85 via-black/15 to-transparent" />
       <PriorityBadge
         priority={item.priority}

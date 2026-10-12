@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import PdfThumbnail from "@/components/PdfThumbnail";
+import PaperArt from "@/components/PaperArt";
 import Reveal from "@/components/Reveal";
 
 type Bookmark = {
@@ -14,10 +14,6 @@ type Bookmark = {
   url: string;
   publishedAt: string;
 };
-
-function pdfUrlFor(absUrl: string): string {
-  return absUrl.replace("/abs/", "/pdf/");
-}
 
 export default function SavedClient({ initialBookmarks }: { initialBookmarks: Bookmark[] }) {
   const [items, setItems] = useState(initialBookmarks);
@@ -56,7 +52,7 @@ export default function SavedClient({ initialBookmarks }: { initialBookmarks: Bo
 
   return (
     <div className="animate-fade-in-up space-y-6">
-      <h1 className="font-display text-4xl font-black uppercase tracking-tight text-slate-900 dark:text-neutral-100">
+      <h1 className="font-display text-4xl font-black italic tracking-tight text-slate-900 dark:text-neutral-100">
         Saved papers
       </h1>
 
@@ -102,8 +98,8 @@ export default function SavedClient({ initialBookmarks }: { initialBookmarks: Bo
           <div
             className="group flex gap-4 overflow-hidden border-2 border-slate-200 bg-white p-3 transition-all hover:-translate-y-0.5 hover:border-slate-900 hover:shadow-[4px_4px_0_0_var(--color-accent)] dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-neutral-100"
           >
-            <PdfThumbnail
-              pdfUrl={pdfUrlFor(b.url)}
+            <PaperArt
+              seed={b.paperId}
               alt={b.title}
               className="aspect-[3/4] w-20 shrink-0 border border-slate-300 dark:border-neutral-700 sm:w-24"
             />
