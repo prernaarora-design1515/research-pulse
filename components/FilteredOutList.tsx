@@ -3,6 +3,7 @@
 import { useState } from "react";
 import type { BriefItemView } from "@/lib/db/briefQueries";
 import PdfThumbnail from "./PdfThumbnail";
+import PriorityBadge from "./PriorityBadge";
 
 function pdfUrlFor(absUrl: string): string {
   return absUrl.replace("/abs/", "/pdf/");
@@ -58,9 +59,15 @@ export default function FilteredOutList({
                   className="aspect-[3/4] w-12 shrink-0 border border-slate-300 dark:border-neutral-700"
                 />
                 <div className="min-w-0 flex-1">
-                  <p className="line-clamp-2 text-xs font-medium text-slate-700 group-hover:text-accent dark:text-neutral-300">
-                    {item.title}
-                  </p>
+                  <div className="flex items-start justify-between gap-2">
+                    <p className="line-clamp-2 text-xs font-medium text-slate-700 group-hover:text-accent dark:text-neutral-300">
+                      {item.title}
+                    </p>
+                    <PriorityBadge
+                      priority={item.priority}
+                      className="shrink-0 text-slate-400 dark:text-neutral-600"
+                    />
+                  </div>
                   <p className="mt-1 text-[11px] text-slate-400 dark:text-neutral-600">
                     {item.significanceScore > 0
                       ? `Score ${item.significanceScore}/10 · ${item.selectionReason}`

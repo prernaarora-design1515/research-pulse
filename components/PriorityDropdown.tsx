@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 
-type Priority = "low" | "medium" | "high";
+export type Priority = "low" | "medium" | "high";
 
 const textClass: Record<string, string> = {
   high: "text-red-700 dark:text-red-400",
@@ -13,9 +13,11 @@ const textClass: Record<string, string> = {
 export default function PriorityDropdown({
   briefItemId,
   initialPriority,
+  onChanged,
 }: {
   briefItemId: number;
   initialPriority: string;
+  onChanged?: (next: Priority) => void;
 }) {
   const [priority, setPriority] = useState(initialPriority);
   const [saving, setSaving] = useState(false);
@@ -30,7 +32,11 @@ export default function PriorityDropdown({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ id: briefItemId, priority: next }),
       });
-      if (!res.ok) setPriority(prev);
+      if (!res.ok) {
+        setPriority(prev);
+      } else {
+        onChanged?.(next);
+      }
     } catch {
       setPriority(prev);
     } finally {
