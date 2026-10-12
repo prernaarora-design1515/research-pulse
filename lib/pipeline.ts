@@ -138,6 +138,7 @@ export async function runBriefPipeline(): Promise<RunSummary> {
       .filter(
         (x): x is { candidate: ScoredPaper; verdict: GeminiVerdict } => x.verdict !== undefined
       );
+    const unjudged = candidates.filter((c) => !verdicts.has(c.arxivId));
 
     judged.sort((a, b) => b.verdict.significance_score - a.verdict.significance_score);
 
@@ -161,6 +162,25 @@ export async function runBriefPipeline(): Promise<RunSummary> {
       });
 
       if (isSelected) summary.papersSelected += 1;
+    }
+
+    // Candidates the AI never got to (e.g. a provider outage) stay visible
+    // instead of silently vanishing — "nothing hidden" applies to AI
+    // failures too, not just low-significance papers.
+    for (const candidate of unjudged) {
+      const paperId = await upsertPaper(candidate);
+      await db.insert(briefItems).values({
+        briefId: brief.id,
+        paperId,
+        domainId: d.id,
+        significanceScore: 0,
+        selectionReason: "AI review unavailable",
+        summary: candidate.abstract.slice(0, 280) + (candidate.abstract.length > 280 ? "…" : ""),
+        whyItMatters:
+          "Not yet assessed — the AI provider was unavailable during this run. The abstract above is shown as-is.",
+        priority: "medium",
+        isSelected: false,
+      });
     }
   }
 

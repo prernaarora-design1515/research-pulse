@@ -50,7 +50,7 @@ export default function BriefView({
 
             <PaperRow items={activeDomain.selected} onOpen={setOpenItem} />
 
-            <FilteredOutList items={activeDomain.filteredOut} />
+            <FilteredOutList items={activeDomain.filteredOut} onOpen={setOpenItem} />
           </div>
         </>
       ) : (

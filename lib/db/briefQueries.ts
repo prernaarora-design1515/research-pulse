@@ -1,4 +1,4 @@
-import { desc, eq, inArray, and } from "drizzle-orm";
+import { desc, eq, inArray } from "drizzle-orm";
 import { db } from "./client";
 import { briefs, briefItems, papers, domains, bookmarks } from "./schema";
 import type { RunSummary } from "../pipeline";
@@ -49,11 +49,12 @@ async function getAbsoluteLatestBriefId(): Promise<number | null> {
 
 /**
  * Picks which brief the homepage should show. Prefers the most recent run
- * that actually surfaced papers over the literal latest attempt, so a run
- * that came back empty (e.g. an AI-provider quota failure) doesn't bury a
- * good brief behind a blank page. Also reports whether a newer, empty run
- * exists so the UI can be transparent about it rather than silently
- * reordering history.
+ * that actually has any papers (selected or filtered-out) over the literal
+ * latest attempt, so a run that came back fully empty (e.g. arXiv itself
+ * was unreachable) doesn't bury a good brief behind a blank page. A run
+ * where the AI provider failed but arXiv papers were still fetched counts
+ * as "has content" here — those papers are real and visible, just missing
+ * an AI score, which the UI surfaces honestly rather than hiding.
  */
 export async function getHomepageBrief(): Promise<{
   id: number | null;
@@ -63,10 +64,7 @@ export async function getHomepageBrief(): Promise<{
   const [withResults] = await db
     .selectDistinct({ id: briefs.id, createdAt: briefs.createdAt })
     .from(briefs)
-    .innerJoin(
-      briefItems,
-      and(eq(briefItems.briefId, briefs.id), eq(briefItems.isSelected, true))
-    )
+    .innerJoin(briefItems, eq(briefItems.briefId, briefs.id))
     .orderBy(desc(briefs.createdAt))
     .limit(1);
 
