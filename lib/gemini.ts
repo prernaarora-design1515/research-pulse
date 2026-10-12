@@ -10,7 +10,10 @@ export type GeminiVerdict = {
   priority: "low" | "medium" | "high";
 };
 
-const BATCH_SIZE = 12;
+// Free-tier quota is 20 requests/day. A full run (8 domains x candidate cap)
+// must fit comfortably under that, with room left for manual re-runs, so we
+// pack more papers into fewer, larger requests rather than many small ones.
+const BATCH_SIZE = 20;
 
 function getClient() {
   const apiKey = process.env.GEMINI_API_KEY;
@@ -90,6 +93,7 @@ async function callGemini(prompt: string): Promise<string> {
     contents: prompt,
     config: {
       responseMimeType: "application/json",
+      maxOutputTokens: 8192,
     },
   });
 
