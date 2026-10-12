@@ -107,7 +107,10 @@ export async function runBriefPipeline(): Promise<RunSummary> {
     alreadyShown,
     hfUpvotes
   );
-  const cappedByDomain = capCandidatesPerDomain(scoredByDomain, 25);
+  // Capped lower than before (was 25) so a full 8-domain run stays well
+  // under Gemini's free-tier 20 requests/day quota: 8 x 20 candidates / 20
+  // per batch = 8 requests, leaving headroom for manual re-runs the same day.
+  const cappedByDomain = capCandidatesPerDomain(scoredByDomain, 20);
 
   for (const [domainId, scanned] of totalScannedByDomain) {
     summary.papersScanned += scanned;
