@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import type { BriefDetail } from "@/lib/db/briefQueries";
+import type { BriefDetail, BriefItemView } from "@/lib/db/briefQueries";
 import DomainPlacards from "./DomainPlacards";
 import FilteredOutList from "./FilteredOutList";
-import PaperCard from "./PaperCard";
+import PaperMarquee from "./PaperMarquee";
+import PaperDetailModal from "./PaperDetailModal";
 
 export default function BriefView({
   brief,
@@ -16,6 +17,7 @@ export default function BriefView({
   const totalShown = brief.domains.reduce((sum, d) => sum + d.selected.length, 0);
   const [activeId, setActiveId] = useState(brief.domains[0]?.domainId);
   const activeDomain = brief.domains.find((d) => d.domainId === activeId) ?? brief.domains[0];
+  const [openItem, setOpenItem] = useState<BriefItemView | null>(null);
 
   return (
     <div className="space-y-8">
@@ -43,20 +45,11 @@ export default function BriefView({
 
           <div key={activeDomain.domainId} className="animate-fade-in-up space-y-4">
             <p className="text-xs text-slate-400 dark:text-neutral-600">
-              {activeDomain.scanned} scanned, {activeDomain.selected.length} shown
+              {activeDomain.scanned} scanned, {activeDomain.selected.length} shown &middot;
+              scroll over the papers to drive them
             </p>
 
-            {activeDomain.selected.length === 0 ? (
-              <p className="py-12 text-center text-sm text-slate-400 dark:text-neutral-600">
-                Nothing significant surfaced this week in this domain.
-              </p>
-            ) : (
-              <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
-                {activeDomain.selected.map((item, i) => (
-                  <PaperCard key={item.paperId} item={item} allTags={allTags} index={i} />
-                ))}
-              </div>
-            )}
+            <PaperMarquee items={activeDomain.selected} onOpen={setOpenItem} />
 
             <FilteredOutList items={activeDomain.filteredOut} />
           </div>
@@ -64,6 +57,8 @@ export default function BriefView({
       ) : (
         <p className="text-sm text-slate-400 dark:text-neutral-600">No domains configured.</p>
       )}
+
+      <PaperDetailModal item={openItem} allTags={allTags} onClose={() => setOpenItem(null)} />
     </div>
   );
 }
