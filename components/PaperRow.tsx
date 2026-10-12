@@ -27,7 +27,7 @@ function PaperTile({ item, onOpen }: { item: BriefItemView; onOpen: () => void }
         <p className="text-[10px] font-medium uppercase tracking-wider text-emerald-300">
           {item.selectionReason}
         </p>
-        <h3 className="mt-1 text-sm font-semibold leading-snug text-white line-clamp-2">
+        <h3 className="mt-1 font-display text-base font-semibold leading-snug text-white line-clamp-2">
           {item.title}
         </h3>
         <p className="mt-1 text-[11px] text-white/70">

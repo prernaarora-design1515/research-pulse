@@ -5,6 +5,8 @@
 @theme inline {
   --color-accent: #e3102b;
   --color-accent-foreground: #ffffff;
+  --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-display), Georgia, "Times New Roman", serif;
 }
 
 :root {
