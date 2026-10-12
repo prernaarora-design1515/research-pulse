@@ -81,7 +81,7 @@ export default function PaperActions({
         } ${
           bookmarked
             ? "bg-yellow-100 text-yellow-800 hover:bg-yellow-200 dark:bg-yellow-500/15 dark:text-yellow-400 dark:hover:bg-yellow-500/25"
-            : "bg-slate-100 text-slate-500 hover:bg-slate-200 dark:bg-neutral-800 dark:text-neutral-500 dark:hover:bg-neutral-700"
+            : "bg-neutral-100 text-neutral-500 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-500 dark:hover:bg-neutral-700"
         } disabled:opacity-50`}
       >
         {bookmarked ? "★ saved" : "☆ save"}
@@ -118,12 +118,12 @@ export default function PaperActions({
           }}
           onBlur={() => addTag(draft)}
           placeholder="tag + Enter"
-          className="w-24 rounded border border-slate-300 bg-white px-1.5 py-0.5 text-[11px] text-slate-900 focus:border-accent focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
+          className="w-24 rounded border border-neutral-300 bg-white px-1.5 py-0.5 text-[11px] text-neutral-900 focus:border-accent focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
         />
       ) : (
         <button
           onClick={() => setAdding(true)}
-          className="rounded-full px-1.5 py-0.5 text-[11px] text-slate-400 transition-colors hover:bg-slate-100 hover:text-accent dark:text-neutral-600 dark:hover:bg-neutral-800"
+          className="rounded-full px-1.5 py-0.5 text-[11px] text-neutral-400 transition-colors hover:bg-neutral-100 hover:text-accent dark:text-neutral-600 dark:hover:bg-neutral-800"
         >
           + tag
         </button>

@@ -66,12 +66,12 @@ export default function ThemeToggle() {
       <button
         onClick={() => setOpen((o) => !o)}
         aria-label="Change theme"
-        className="flex h-7 w-7 items-center justify-center rounded border border-slate-300 text-sm hover:border-accent hover:text-accent transition-transform active:scale-90 dark:border-neutral-700"
+        className="flex h-7 w-7 items-center justify-center rounded border border-neutral-300 text-sm hover:border-accent hover:text-accent transition-transform active:scale-90 dark:border-neutral-700"
       >
         {current.icon}
       </button>
       {open && (
-        <div className="animate-fade-in-up absolute right-0 top-9 z-20 w-36 overflow-hidden rounded border border-slate-300 bg-white text-xs shadow-lg dark:border-neutral-700 dark:bg-neutral-900">
+        <div className="animate-fade-in-up absolute right-0 top-9 z-20 w-36 overflow-hidden rounded border border-neutral-300 bg-white text-xs shadow-lg dark:border-neutral-700 dark:bg-neutral-900">
           {MODES.map((m) => (
             <button
               key={m.value}

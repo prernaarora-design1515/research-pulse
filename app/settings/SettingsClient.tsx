@@ -20,10 +20,10 @@ const emptyForm = {
 };
 
 const inputClass =
-  "w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 transition-colors focus:border-accent focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100";
+  "w-full rounded-xl border border-neutral-300 bg-white px-3 py-2 text-sm text-neutral-900 transition-colors focus:border-accent focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100";
 
 const primaryButtonClass =
-  "rounded-full bg-slate-900 px-4 py-2 text-xs font-semibold uppercase tracking-[0.1em] text-white transition-all hover:bg-accent active:scale-95 disabled:opacity-50 disabled:active:scale-100 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-accent dark:hover:text-accent-foreground";
+  "rounded-full bg-neutral-900 px-4 py-2 text-xs font-semibold uppercase tracking-[0.1em] text-white transition-all hover:opacity-80 active:scale-95 disabled:opacity-50 disabled:active:scale-100 dark:bg-neutral-100 dark:text-neutral-900";
 
 export default function SettingsClient({
   initialDomains,
@@ -127,13 +127,13 @@ export default function SettingsClient({
 
   return (
     <div className="animate-fade-in-up space-y-10">
-      <h1 className="font-display text-4xl font-black italic tracking-tight text-slate-900 dark:text-neutral-100">
+      <h1 className="font-display text-5xl font-bold uppercase leading-[0.9] tracking-[-0.04em] text-neutral-900 sm:text-7xl dark:text-neutral-100">
         Settings
       </h1>
 
       <Reveal>
-      <section className="space-y-3 rounded-2xl bg-slate-50 p-6 dark:bg-neutral-900">
-        <h2 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400 dark:text-neutral-600">
+      <section className="space-y-3 rounded-2xl bg-neutral-50 p-6 dark:bg-neutral-900">
+        <h2 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-neutral-400 dark:text-neutral-600">
           Recipient email
         </h2>
         <form onSubmit={handleSaveEmail} className="flex max-w-md gap-2">
@@ -150,7 +150,7 @@ export default function SettingsClient({
           </button>
         </form>
         {emailStatus && (
-          <p className="animate-fade-in-up text-sm text-slate-600 dark:text-neutral-400">
+          <p className="animate-fade-in-up text-sm text-neutral-600 dark:text-neutral-400">
             {emailStatus}
           </p>
         )}
@@ -158,8 +158,8 @@ export default function SettingsClient({
       </Reveal>
 
       <Reveal delay={80}>
-      <section className="space-y-3 rounded-2xl bg-slate-50 p-6 dark:bg-neutral-900">
-        <h2 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400 dark:text-neutral-600">Run now</h2>
+      <section className="space-y-3 rounded-2xl bg-neutral-50 p-6 dark:bg-neutral-900">
+        <h2 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-neutral-400 dark:text-neutral-600">Run now</h2>
         <button
           onClick={handleRunNow}
           disabled={runningBrief}
@@ -169,7 +169,7 @@ export default function SettingsClient({
           {runningBrief ? "Running…" : "Run now"}
         </button>
         {runResult && (
-          <p className="animate-fade-in-up text-sm text-slate-600 dark:text-neutral-400">
+          <p className="animate-fade-in-up text-sm text-neutral-600 dark:text-neutral-400">
             {runResult}
           </p>
         )}
@@ -177,30 +177,30 @@ export default function SettingsClient({
       </Reveal>
 
       <Reveal delay={160}>
-      <section className="space-y-3 rounded-2xl bg-slate-50 p-6 dark:bg-neutral-900">
-        <h2 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400 dark:text-neutral-600">Domains</h2>
-        <div className="divide-y divide-slate-200 overflow-hidden rounded-2xl bg-white dark:divide-neutral-800 dark:bg-neutral-800/50">
+      <section className="space-y-3 rounded-2xl bg-neutral-50 p-6 dark:bg-neutral-900">
+        <h2 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-neutral-400 dark:text-neutral-600">Domains</h2>
+        <div className="divide-y divide-neutral-200 overflow-hidden rounded-2xl bg-white dark:divide-neutral-800 dark:bg-neutral-800/50">
           {domainsList.length === 0 && (
-            <p className="p-4 text-sm text-slate-500 dark:text-neutral-500">
+            <p className="p-4 text-sm text-neutral-500 dark:text-neutral-500">
               No domains yet. Add one below.
             </p>
           )}
           {domainsList.map((d, i) => (
             <div
               key={d.id}
-              className="animate-fade-in-up flex flex-col gap-2 p-4 transition-colors hover:bg-slate-50 sm:flex-row sm:items-center sm:justify-between dark:hover:bg-neutral-800/50"
+              className="animate-fade-in-up flex flex-col gap-2 p-4 transition-colors hover:bg-neutral-50 sm:flex-row sm:items-center sm:justify-between dark:hover:bg-neutral-800/50"
               style={{ animationDelay: `${Math.min(i, 10) * 40}ms` }}
             >
               <div>
-                <p className="font-medium text-slate-900 dark:text-neutral-100">
+                <p className="font-medium text-neutral-900 dark:text-neutral-100">
                   {d.name}{" "}
                   {!d.isActive && (
-                    <span className="ml-2 rounded-full bg-slate-100 px-2 py-0.5 text-xs text-slate-500 dark:bg-neutral-800 dark:text-neutral-500">
+                    <span className="ml-2 rounded-full bg-neutral-100 px-2 py-0.5 text-xs text-neutral-500 dark:bg-neutral-800 dark:text-neutral-500">
                       inactive
                     </span>
                   )}
                 </p>
-                <p className="text-sm text-slate-500 dark:text-neutral-500">
+                <p className="text-sm text-neutral-500 dark:text-neutral-500">
                   Categories: {d.arxivCategories.join(", ")} &middot; Keywords:{" "}
                   {d.keywords.join(", ")} &middot; Shows top {d.papersToShow}
                 </p>
@@ -208,7 +208,7 @@ export default function SettingsClient({
               <div className="flex gap-3 text-sm">
                 <button
                   onClick={() => toggleActive(d)}
-                  className="text-slate-600 transition-colors hover:text-accent dark:text-neutral-400"
+                  className="text-neutral-600 transition-colors hover:text-accent dark:text-neutral-400"
                 >
                   {d.isActive ? "Deactivate" : "Activate"}
                 </button>
@@ -227,10 +227,10 @@ export default function SettingsClient({
           onSubmit={handleAddDomain}
           className="space-y-3 rounded-2xl bg-white p-4 dark:bg-neutral-800/50"
         >
-          <h3 className="font-medium text-slate-800 dark:text-neutral-200">Add a domain</h3>
+          <h3 className="font-medium text-neutral-800 dark:text-neutral-200">Add a domain</h3>
           <div className="grid gap-3 sm:grid-cols-2">
             <div>
-              <label className="mb-1 block text-sm text-slate-600 dark:text-neutral-400">
+              <label className="mb-1 block text-sm text-neutral-600 dark:text-neutral-400">
                 Name
               </label>
               <input
@@ -241,7 +241,7 @@ export default function SettingsClient({
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm text-slate-600 dark:text-neutral-400">
+              <label className="mb-1 block text-sm text-neutral-600 dark:text-neutral-400">
                 Papers to show
               </label>
               <input
@@ -254,7 +254,7 @@ export default function SettingsClient({
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm text-slate-600 dark:text-neutral-400">
+              <label className="mb-1 block text-sm text-neutral-600 dark:text-neutral-400">
                 arXiv categories (comma-separated)
               </label>
               <input
@@ -266,7 +266,7 @@ export default function SettingsClient({
               />
             </div>
             <div>
-              <label className="mb-1 block text-sm text-slate-600 dark:text-neutral-400">
+              <label className="mb-1 block text-sm text-neutral-600 dark:text-neutral-400">
                 Keywords (comma-separated)
               </label>
               <input

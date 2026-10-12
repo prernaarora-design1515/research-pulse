@@ -1,27 +1,26 @@
 import type { Metadata } from "next";
-import { Bodoni_Moda, Inter } from "next/font/google";
+import { Inter_Tight, Azeret_Mono } from "next/font/google";
 import Link from "next/link";
 import ThemeScript from "@/components/ThemeScript";
 import ThemeToggle from "@/components/ThemeToggle";
 import LiveClock from "@/components/LiveClock";
 import NavLinks from "@/components/NavLinks";
-import CursorBlob from "@/components/CursorBlob";
 import Footer from "@/components/Footer";
 import NotesWidget from "@/components/NotesWidget";
 import { ActivePaperProvider } from "@/components/ActivePaperContext";
 import "./globals.css";
 
-const bodoni = Bodoni_Moda({
+const interTight = Inter_Tight({
   subsets: ["latin"],
   variable: "--font-display",
-  weight: ["400", "500", "600", "700", "800", "900"],
-  style: ["normal", "italic"],
+  weight: ["400", "500", "600", "700", "800"],
   display: "swap",
 });
 
-const inter = Inter({
+const azeret = Azeret_Mono({
   subsets: ["latin"],
-  variable: "--font-sans",
+  variable: "--font-mono",
+  weight: ["400", "500"],
   display: "swap",
 });
 
@@ -34,26 +33,18 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
-      className={`h-full antialiased ${bodoni.variable} ${inter.variable}`}
+      className={`h-full antialiased ${interTight.variable} ${azeret.variable}`}
       suppressHydrationWarning
     >
       <head>
         <ThemeScript />
       </head>
-      <body className="min-h-full flex flex-col font-sans">
-        <div
-          aria-hidden
-          className="grain-overlay pointer-events-none fixed inset-0 z-[999] opacity-[0.07] mix-blend-overlay"
-        />
+      <body className="min-h-full flex flex-col font-display">
         <ActivePaperProvider>
-          <CursorBlob />
-          <header className="sticky top-0 z-10 border-b border-slate-200 bg-white/90 backdrop-blur-sm dark:border-neutral-800 dark:bg-black/90">
-            <nav className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-x-6 gap-y-2 px-5 py-4 sm:px-8">
-              <Link
-                href="/"
-                className="font-display text-xl font-black italic tracking-tight text-slate-900 dark:text-neutral-100"
-              >
-                Research Pulse
+          <header className="sticky top-0 z-10 bg-[#f9f9f9]/85 backdrop-blur-md dark:bg-[#121412]/85">
+            <nav className="mx-auto flex max-w-6xl flex-wrap items-center justify-between gap-x-6 gap-y-2 px-5 py-4 font-mono text-[13px] uppercase sm:px-8">
+              <Link href="/" className="font-medium tracking-tight text-[#121212] dark:text-[#f1f1f1]">
+                &copy;Research Pulse
               </Link>
               <NavLinks />
               <div className="flex items-center gap-3">
@@ -62,7 +53,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
               </div>
             </nav>
           </header>
-          <main className="mx-auto w-full max-w-5xl flex-1 px-5 py-10 sm:px-8">{children}</main>
+          <main className="mx-auto w-full max-w-6xl flex-1 px-5 py-10 sm:px-8">{children}</main>
           <Footer />
           <NotesWidget />
         </ActivePaperProvider>

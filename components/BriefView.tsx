@@ -75,10 +75,10 @@ export default function BriefView({
   return (
     <div className="space-y-8">
       <div className="animate-fade-in-up">
-        <h1 className="font-display text-4xl font-black italic tracking-tight text-slate-900 sm:text-5xl dark:text-neutral-100">
+        <h1 className="font-display text-5xl font-bold uppercase leading-[0.9] tracking-[-0.04em] text-neutral-900 sm:text-7xl dark:text-neutral-100">
           Week of {brief.weekStart}
         </h1>
-        <p className="mt-2 text-sm text-slate-500 dark:text-neutral-500">
+        <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-500">
           {brief.papersScanned} scanned &middot; {totalShown} AI-surfaced
           {totalUnscored > 0 && ` (+${totalUnscored} shown unscored)`} &middot;{" "}
           {brief.domains.length} domains
@@ -102,7 +102,7 @@ export default function BriefView({
           />
 
           <div key={activeDomain.domainId} className="animate-fade-in-up space-y-4">
-            <p className="text-xs text-slate-400 dark:text-neutral-600">
+            <p className="text-xs text-neutral-400 dark:text-neutral-600">
               {activeDomain.scanned} scanned, {activeDomain.selected.length} shown
               {!hasSelected && hasAnyPapers && " · showing all scanned papers (none AI-scored yet)"}
             </p>
@@ -119,8 +119,8 @@ export default function BriefView({
                       disabled={p !== "all" && count === 0}
                       className={`rounded-full px-3.5 py-1.5 text-xs font-medium capitalize transition-all disabled:opacity-30 ${
                         active
-                          ? "bg-slate-900 text-white dark:bg-neutral-100 dark:text-neutral-900"
-                          : "bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800"
+                          ? "bg-neutral-900 text-white dark:bg-neutral-100 dark:text-neutral-900"
+                          : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200 dark:bg-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800"
                       }`}
                     >
                       {p} <span className="opacity-60">{count}</span>
@@ -134,12 +134,12 @@ export default function BriefView({
               visibleMainRowItems.length > 0 ? (
                 <PaperRow items={visibleMainRowItems} onOpen={setOpenItem} />
               ) : (
-                <p className="py-10 text-sm text-slate-400 dark:text-neutral-600">
+                <p className="py-10 text-sm text-neutral-400 dark:text-neutral-600">
                   No {priorityFilter}-priority papers in this domain.
                 </p>
               )
             ) : (
-              <p className="py-10 text-sm text-slate-400 dark:text-neutral-600">
+              <p className="py-10 text-sm text-neutral-400 dark:text-neutral-600">
                 Nothing found in this domain this week.
               </p>
             )}
@@ -148,7 +148,7 @@ export default function BriefView({
           </div>
         </>
       ) : (
-        <p className="text-sm text-slate-400 dark:text-neutral-600">No domains configured.</p>
+        <p className="text-sm text-neutral-400 dark:text-neutral-600">No domains configured.</p>
       )}
 
       <PaperDetailModal

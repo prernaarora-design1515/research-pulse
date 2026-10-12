@@ -32,9 +32,9 @@ export default function LiveClock() {
   }, []);
 
   return (
-    <div className="hidden items-center gap-2 text-xs text-slate-500 sm:flex dark:text-neutral-400">
+    <div className="hidden items-center gap-2 text-xs text-neutral-500 sm:flex dark:text-neutral-400">
       <span className="tabular-nums">{now ? formatTime(now) : "--:--:--"}</span>
-      <span className="text-slate-300 dark:text-neutral-700">&middot;</span>
+      <span className="text-neutral-300 dark:text-neutral-700">&middot;</span>
       <span>{now ? formatDate(now) : "---"}</span>
     </div>
   );

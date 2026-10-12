@@ -18,8 +18,10 @@ export function ActivePaperProvider({ children }: { children: ReactNode }) {
   );
 }
 
+const noop = { activePaper: null as ActivePaper, setActivePaper: () => {} };
+
+// Degrades to a no-op instead of throwing: a missing provider should only
+// disable the notes link-up, never take the whole page down.
 export function useActivePaper() {
-  const ctx = useContext(ActivePaperCtx);
-  if (!ctx) throw new Error("useActivePaper must be used within ActivePaperProvider");
-  return ctx;
+  return useContext(ActivePaperCtx) ?? noop;
 }

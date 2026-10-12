@@ -14,67 +14,67 @@ const RESOURCE_LINKS = [
 
 export default function Footer() {
   return (
-    <footer className="border-t border-slate-200 dark:border-neutral-800">
-      <div className="mx-auto grid max-w-5xl grid-cols-1 gap-10 px-5 py-12 sm:px-8 md:grid-cols-4">
-        <div className="md:col-span-2">
-          <p className="font-display text-3xl font-black italic leading-tight tracking-tight text-slate-900 dark:text-neutral-100">
-            An AI system that narrows your weekly research reading.
-          </p>
-          <p className="mt-3 max-w-sm text-sm text-slate-500 dark:text-neutral-500">
-            Nothing is ever hidden — only ranked. Every scanned paper stays one click away.
-          </p>
-        </div>
+    <footer className="mt-16 bg-[#141816] text-[#f1f1f1]">
+      <div className="mx-auto max-w-6xl px-5 pt-16 sm:px-8">
+        <p className="text-justify-last font-display text-4xl font-bold uppercase leading-[0.95] tracking-[-0.04em] sm:text-6xl">
+          A system that narrows your weekly research reading. Nothing is hidden, only ranked.
+        </p>
 
-        <div>
-          <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400 dark:text-neutral-600">
-            Navigate
-          </p>
-          <ul className="space-y-2 text-sm">
-            {NAV_LINKS.map((l) => (
-              <li key={l.href}>
-                <Link
-                  href={l.href}
-                  className="text-slate-600 transition-colors hover:text-accent dark:text-neutral-400"
-                >
-                  {l.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
-
-        <div>
-          <p className="mb-3 text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400 dark:text-neutral-600">
-            Resources
-          </p>
-          <ul className="space-y-2 text-sm">
-            {RESOURCE_LINKS.map((l) => (
-              <li key={l.href}>
-                <a
-                  href={l.href}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-slate-600 transition-colors hover:text-accent dark:text-neutral-400"
-                >
-                  {l.label} ↗
-                </a>
-              </li>
-            ))}
-          </ul>
-          <p className="mt-5 text-[11px] uppercase tracking-[0.2em] text-slate-400 dark:text-neutral-600">
-            Runs every Monday · 07:00 IST
-          </p>
+        <div className="mt-14 grid grid-cols-2 gap-8 font-mono text-[12px] uppercase sm:grid-cols-4">
+          <div>
+            <p className="mb-3 text-[#f1f1f1]/50">(Navigate)</p>
+            <ul className="space-y-1.5">
+              {NAV_LINKS.map((l) => (
+                <li key={l.href}>
+                  <Link href={l.href} className="transition-opacity hover:opacity-60">
+                    {l.label}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <p className="mb-3 text-[#f1f1f1]/50">(Resources)</p>
+            <ul className="space-y-1.5">
+              {RESOURCE_LINKS.map((l) => (
+                <li key={l.href}>
+                  <a
+                    href={l.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="transition-opacity hover:opacity-60"
+                  >
+                    {l.label} ↗
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+          <div>
+            <p className="mb-3 text-[#f1f1f1]/50">(Schedule)</p>
+            <p>Every Monday</p>
+            <p>07:00 IST</p>
+          </div>
+          <div>
+            <p className="mb-3 text-[#f1f1f1]/50">(Stack)</p>
+            <p>Next.js · Neon</p>
+            <p>Gemini · Resend</p>
+          </div>
         </div>
       </div>
 
-      <div className="overflow-hidden border-t border-slate-200 py-2 dark:border-neutral-800">
-        <p className="select-none whitespace-nowrap text-center font-display text-[16vw] font-black italic leading-none tracking-tighter text-slate-900/[0.06] dark:text-neutral-100/[0.06]">
-          Research Pulse
+      <div className="overflow-hidden pt-10">
+        <p
+          className="select-none whitespace-nowrap text-center font-display text-[19vw] font-extrabold uppercase leading-[0.78] tracking-[-0.06em] text-transparent"
+          style={{ WebkitTextStroke: "1px rgba(241,241,241,0.35)" }}
+        >
+          Research
         </p>
       </div>
 
-      <div className="border-t border-slate-200 px-5 py-5 text-center text-xs uppercase tracking-[0.15em] text-slate-400 sm:px-8 dark:border-neutral-800 dark:text-neutral-600">
-        &copy; {new Date().getFullYear()} Research Pulse — the system narrows, Kavita chooses.
+      <div className="mx-auto flex max-w-6xl justify-between px-5 py-5 font-mono text-[11px] uppercase text-[#f1f1f1]/50 sm:px-8">
+        <span>&copy;{new Date().getFullYear()} Research Pulse</span>
+        <span>The system narrows · Kavita chooses</span>
       </div>
     </footer>
   );

@@ -24,7 +24,7 @@ export default function NavLinks() {
             className={`relative py-1 transition-colors ${
               active
                 ? "font-medium text-accent"
-                : "text-slate-500 hover:text-slate-900 dark:text-neutral-400 dark:hover:text-neutral-100"
+                : "text-neutral-500 hover:text-neutral-900 dark:text-neutral-400 dark:hover:text-neutral-100"
             }`}
           >
             {item.label}

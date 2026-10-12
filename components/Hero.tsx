@@ -71,49 +71,52 @@ export default function Hero({
   }
 
   return (
-    <section className="animate-fade-in-up py-4 lg:py-8">
-      <div className="mb-8 flex items-center justify-between border-y border-slate-200 py-2 text-[11px] font-medium uppercase tracking-[0.25em] text-slate-500 dark:border-neutral-800 dark:text-neutral-500">
-        <span>Weekly Dispatch</span>
-        <span>{domainsCount} Domains Scanned — Nothing Hidden</span>
+    <section className="animate-fade-in-up pb-4 lg:pb-8">
+      <h1 className="text-justify-last font-display text-[15vw] font-extrabold uppercase leading-[0.82] tracking-[-0.06em] text-[#121212] lg:text-[11.5rem] dark:text-[#f1f1f1]">
+        Pulse
+      </h1>
+
+      <div className="mt-6 grid grid-cols-3 gap-x-4 gap-y-1 font-mono text-[10px] uppercase text-[#121212] sm:grid-cols-5 dark:text-[#f1f1f1]">
+        <span>Weekly</span>
+        <span>arXiv</span>
+        <span>Gemini</span>
+        <span>Ranked</span>
+        <span>Nothing hidden</span>
+        <span>({String(domainsCount).padStart(2, "0")})</span>
+        <span>Domains</span>
+        <span>Live data</span>
+        <span>Kavita</span>
+        <span>Chooses</span>
       </div>
 
-      <div className="grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-16">
+      <p className="mt-8 max-w-3xl text-xl leading-snug text-[#121212] sm:text-2xl dark:text-[#f1f1f1]">
+        The system narrows, Kavita chooses. Every week {domainsCount} research domains are scanned,
+        scored and surfaced from live arXiv data &mdash; nothing is ever hidden, just ranked.
+      </p>
+
+      <div className="mt-12 grid grid-cols-1 gap-10 lg:grid-cols-2 lg:gap-16">
         <div className="flex flex-col gap-7">
-          <h1 className="font-display leading-[0.88] tracking-tight text-slate-900 dark:text-neutral-100">
-            <span className="block text-xl font-normal italic text-slate-500 sm:text-2xl dark:text-neutral-500">
-              The system narrows.
-            </span>
-            <span className="-ml-0.5 block text-6xl font-black italic sm:text-7xl lg:text-[5.5rem]">
-              Kavita
-              <br />
-              <span className="text-accent">Chooses.</span>
-            </span>
-          </h1>
-          <p className="max-w-sm text-sm leading-relaxed text-slate-600 dark:text-neutral-400">
-            Every week, {domainsCount} research domains get scanned, scored and surfaced from live
-            arXiv data — nothing is ever hidden, just ranked.
-          </p>
           <div className="flex flex-wrap items-center gap-5">
             <button
               onClick={scrollToBrief}
-              className="rounded-full bg-slate-900 px-6 py-3 text-xs font-semibold uppercase tracking-[0.15em] text-white transition-all hover:bg-accent active:scale-95 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-accent dark:hover:text-white"
+              className="rounded-full bg-neutral-900 px-6 py-3 text-xs font-semibold uppercase tracking-[0.15em] text-white transition-all hover:opacity-80 active:scale-95 dark:bg-neutral-100 dark:text-neutral-900"
             >
               Explore this week&rsquo;s brief
             </button>
             <Link
               href="/settings"
-              className="group flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.15em] text-slate-700 transition-colors hover:text-accent dark:text-neutral-300"
+              className="group flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.15em] text-neutral-700 transition-colors hover:text-accent dark:text-neutral-300"
             >
               + Add a domain
-              <span className="transition-transform group-hover:translate-x-1">→</span>
+              <span className="transition-transform group-hover:tranneutral-x-1">→</span>
             </Link>
           </div>
 
-          <div className="max-w-sm rounded-2xl bg-slate-50 p-5 dark:bg-neutral-900">
-            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400 dark:text-neutral-600">
+          <div className="max-w-sm rounded-2xl bg-neutral-50 p-5 dark:bg-neutral-900">
+            <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-neutral-400 dark:text-neutral-600">
               See it work
             </p>
-            <p className="mt-1 text-xs text-slate-500 dark:text-neutral-500">
+            <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-500">
               Drop your email and we&rsquo;ll fire off a real test message right now.
             </p>
             <form onSubmit={handleSendTestEmail} className="mt-3 flex gap-2">
@@ -126,12 +129,12 @@ export default function Hero({
                   if (emailStatus !== "idle") setEmailStatus("idle");
                 }}
                 placeholder="you@example.com"
-                className="min-w-0 flex-1 rounded-full border border-slate-300 bg-white px-4 py-2 text-sm text-slate-900 transition-colors focus:border-accent focus:outline-none dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100"
+                className="min-w-0 flex-1 rounded-full border border-neutral-300 bg-white px-4 py-2 text-sm text-neutral-900 transition-colors focus:border-accent focus:outline-none dark:border-neutral-700 dark:bg-neutral-800 dark:text-neutral-100"
               />
               <button
                 type="submit"
                 disabled={emailStatus === "sending"}
-                className="shrink-0 rounded-full bg-slate-900 px-4 py-2 text-xs font-semibold uppercase tracking-[0.1em] text-white transition-all hover:bg-accent active:scale-95 disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-accent dark:hover:text-white"
+                className="shrink-0 rounded-full bg-neutral-900 px-4 py-2 text-xs font-semibold uppercase tracking-[0.1em] text-white transition-all hover:opacity-80 active:scale-95 disabled:opacity-50 dark:bg-neutral-100 dark:text-neutral-900"
               >
                 {emailStatus === "sending" ? "Sending…" : "Send test"}
               </button>
@@ -157,7 +160,7 @@ export default function Hero({
                 <button
                   key={item.paperId}
                   onClick={() => setOpenItem(item)}
-                  className={`group flex flex-col gap-2 rounded-2xl p-2 text-left transition-colors hover:bg-slate-100 dark:hover:bg-neutral-900 ${
+                  className={`group flex flex-col gap-2 rounded-2xl p-2 text-left transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-900 ${
                     featured ? "col-span-2 row-span-2 sm:col-span-2" : ""
                   }`}
                 >
@@ -169,15 +172,15 @@ export default function Hero({
                     />
                     <PriorityStamp
                       priority={item.priority}
-                      className="absolute -bottom-2 -right-2 scale-90"
+                      className="absolute bottom-3 right-3"
                     />
                   </div>
                   <div>
-                    <p className="text-[9px] font-medium uppercase tracking-wider text-slate-400 dark:text-neutral-600">
+                    <p className="text-[9px] font-medium uppercase tracking-wider text-neutral-400 dark:text-neutral-600">
                       {item.domainName}
                     </p>
                     <h3
-                      className={`font-display italic leading-snug text-slate-900 group-hover:text-accent dark:text-neutral-100 line-clamp-2 ${
+                      className={`font-display leading-snug text-neutral-900 group-hover:text-accent dark:text-neutral-100 line-clamp-2 ${
                         featured ? "text-lg" : "text-xs"
                       }`}
                     >
