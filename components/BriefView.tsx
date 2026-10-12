@@ -33,7 +33,7 @@ export default function BriefView({
   return (
     <div className="space-y-8">
       <div className="animate-fade-in-up">
-        <h1 className="text-3xl font-bold tracking-tight text-slate-900 sm:text-4xl dark:text-neutral-100">
+        <h1 className="font-display text-4xl font-black uppercase tracking-tight text-slate-900 sm:text-5xl dark:text-neutral-100">
           Week of {brief.weekStart}
         </h1>
         <p className="mt-2 text-sm text-slate-500 dark:text-neutral-500">

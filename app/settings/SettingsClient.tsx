@@ -126,7 +126,7 @@ export default function SettingsClient({
 
   return (
     <div className="animate-fade-in-up space-y-10">
-      <h1 className="text-3xl font-bold tracking-tight text-slate-900 dark:text-neutral-100">
+      <h1 className="font-display text-4xl font-black uppercase tracking-tight text-slate-900 dark:text-neutral-100">
         Settings
       </h1>
 

@@ -53,7 +53,7 @@ export default function PaperDetailModal({
             <p className="text-[11px] font-medium uppercase tracking-wider text-accent">
               {item.selectionReason} &middot; score {item.significanceScore}/10
             </p>
-            <h2 className="mt-1 text-xl font-semibold leading-snug text-slate-900 dark:text-neutral-100">
+            <h2 className="mt-1 font-display text-2xl font-semibold leading-snug text-slate-900 dark:text-neutral-100">
               {item.title}
             </h2>
             <p className="mt-1 text-sm text-slate-500 dark:text-neutral-500">
