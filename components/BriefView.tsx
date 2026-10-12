@@ -19,6 +19,13 @@ export default function BriefView({
   const activeDomain = brief.domains.find((d) => d.domainId === activeId) ?? brief.domains[0];
   const [openItem, setOpenItem] = useState<BriefItemView | null>(null);
 
+  // If nothing was AI-selected but real papers were scanned, show them
+  // directly instead of hiding real content behind an extra click and a
+  // "nothing significant" message that reads as broken/empty.
+  const hasSelected = (activeDomain?.selected.length ?? 0) > 0;
+  const hasAnyPapers = hasSelected || (activeDomain?.filteredOut.length ?? 0) > 0;
+  const mainRowItems = hasSelected ? activeDomain?.selected ?? [] : activeDomain?.filteredOut ?? [];
+
   return (
     <div className="space-y-8">
       <div className="animate-fade-in-up">
@@ -46,11 +53,20 @@ export default function BriefView({
           <div key={activeDomain.domainId} className="animate-fade-in-up space-y-4">
             <p className="text-xs text-slate-400 dark:text-neutral-600">
               {activeDomain.scanned} scanned, {activeDomain.selected.length} shown
+              {!hasSelected && hasAnyPapers && " · showing all scanned papers (none AI-scored yet)"}
             </p>
 
-            <PaperRow items={activeDomain.selected} onOpen={setOpenItem} />
+            {hasAnyPapers ? (
+              <PaperRow items={mainRowItems} onOpen={setOpenItem} />
+            ) : (
+              <p className="py-10 text-sm text-slate-400 dark:text-neutral-600">
+                Nothing found in this domain this week.
+              </p>
+            )}
 
-            <FilteredOutList items={activeDomain.filteredOut} onOpen={setOpenItem} />
+            {hasSelected && (
+              <FilteredOutList items={activeDomain.filteredOut} onOpen={setOpenItem} />
+            )}
           </div>
         </>
       ) : (
