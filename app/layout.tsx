@@ -18,7 +18,11 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <ThemeScript />
       </head>
       <body className="min-h-full flex flex-col font-sans">
-        <header className="sticky top-0 z-10 border-b border-slate-200/80 bg-[#faf9f7]/90 backdrop-blur-sm dark:border-neutral-800/80 dark:bg-[#0a0b0d]/90">
+        <div
+          aria-hidden
+          className="grain-overlay pointer-events-none fixed inset-0 z-[999] opacity-[0.05] mix-blend-overlay"
+        />
+        <header className="sticky top-0 z-10 border-b border-slate-200/80 bg-white/90 backdrop-blur-sm dark:border-neutral-800/80 dark:bg-black/90">
           <nav className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-x-6 gap-y-2 px-5 py-4 sm:px-8">
             <Link
               href="/"
