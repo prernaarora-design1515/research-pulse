@@ -43,13 +43,16 @@ export default function FeaturedFlag({ item }: { item: Featured }) {
     };
   }, []);
 
+  const assessed = item.significanceScore > 0;
   const lead = item.authors[0] + (item.authors.length > 1 ? " et al." : "");
   const lines = [
     item.domainName,
     lead,
     `Filed ${item.publishedAt.slice(0, 10)}`,
-    `Priority ${item.priority}`,
-    item.selectionReason,
+    `${item.priority[0].toUpperCase()}${item.priority.slice(1)} priority`,
+    // Only a real AI verdict earns a line -- the "review unavailable"
+    // fallback is a status, not a fact about the paper.
+    ...(assessed ? [item.selectionReason] : []),
   ];
 
   return (
@@ -95,11 +98,11 @@ export default function FeaturedFlag({ item }: { item: Featured }) {
               {item.title}
             </h2>
 
-            <ul className="mt-8 space-y-1">
+            <ul className="mt-6 space-y-0.5">
               {lines.map((line, i) => (
                 <li
                   key={i}
-                  className="font-display text-2xl font-semibold capitalize leading-tight tracking-[-0.02em] sm:text-4xl"
+                  className="font-display text-lg font-medium leading-snug tracking-[-0.01em] text-[#121212]/80 sm:text-2xl"
                 >
                   {line}
                   <sup className="ml-1.5 align-super font-mono text-[11px] font-normal">({i + 1})</sup>
@@ -109,7 +112,9 @@ export default function FeaturedFlag({ item }: { item: Featured }) {
 
             <div className="mt-8 border-t-2 border-dotted border-[#121212]/70" />
 
-            <p className="mt-6 max-w-3xl text-sm leading-relaxed text-[#121212]/75">{item.whyItMatters}</p>
+            <p className="mt-6 max-w-3xl text-sm leading-relaxed text-[#121212]/75">
+              {assessed ? item.whyItMatters : item.summary}
+            </p>
             <p className="mt-4 inline-flex items-center gap-2 font-mono text-[12px] uppercase">
               Read on arXiv
               <span className="transition-transform duration-300 group-hover:translate-x-1 group-hover:-translate-y-1">

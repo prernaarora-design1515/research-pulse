@@ -30,9 +30,11 @@ function PaperTile({
         <PriorityStamp priority={item.priority} className="absolute bottom-3 right-3" />
       </Tilt>
       <div>
-        <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-400 dark:text-neutral-600">
-          {item.selectionReason}
-        </p>
+        {item.significanceScore > 0 && (
+          <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-400 dark:text-neutral-600">
+            {item.selectionReason}
+          </p>
+        )}
         <h3
           className={`mt-0.5 font-display leading-snug text-neutral-900 group-hover:text-accent dark:text-neutral-100 line-clamp-2 ${
             featured ? "text-xl" : "text-sm"
