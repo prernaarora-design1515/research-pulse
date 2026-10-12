@@ -3,6 +3,7 @@
 import type { BriefItemView } from "@/lib/db/briefQueries";
 import PaperArt from "./PaperArt";
 import PriorityStamp from "./PriorityStamp";
+import { Tilt } from "./Motion";
 
 function PaperTile({
   item,
@@ -16,18 +17,18 @@ function PaperTile({
   return (
     <button
       onClick={onOpen}
-      className={`group flex flex-col gap-3 rounded-2xl p-2.5 text-left transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-900 ${
+      className={`group flex flex-col gap-3 rounded-2xl p-2.5 text-left ${
         featured ? "sm:col-span-2 sm:row-span-2" : ""
       }`}
     >
-      <div className="relative">
+      <Tilt className="sketch-frame relative rounded-2xl">
         <PaperArt
           seed={item.paperId}
           alt={item.title}
           className={featured ? "aspect-[16/10] w-full" : "aspect-[4/3] w-full"}
         />
         <PriorityStamp priority={item.priority} className="absolute bottom-3 right-3" />
-      </div>
+      </Tilt>
       <div>
         <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-400 dark:text-neutral-600">
           {item.selectionReason}

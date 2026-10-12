@@ -62,7 +62,8 @@ export default function PaperDetailModal({
           </div>
           <div className="min-w-0 flex-1">
             <p className="text-[11px] font-medium uppercase tracking-wider text-accent">
-              {item.selectionReason} &middot; score {item.significanceScore}/10
+              {item.selectionReason}
+              {item.significanceScore > 0 && <> &middot; score {item.significanceScore}/10</>}
             </p>
             <h2 className="mt-1 break-words font-display text-xl font-semibold leading-snug text-neutral-900 dark:text-neutral-100 sm:text-2xl">
               {item.title}

@@ -3,6 +3,7 @@ import { getHomepageBrief, getBriefDetail, getAllTags } from "@/lib/db/briefQuer
 import BriefView from "@/components/BriefView";
 import EmptyState from "@/components/EmptyState";
 import Hero, { type HeroItem } from "@/components/Hero";
+import FeaturedFlag from "@/components/FeaturedFlag";
 
 export const dynamic = "force-dynamic";
 
@@ -31,9 +32,12 @@ export default async function HomePage() {
     .sort((a, b) => b.significanceScore - a.significanceScore)
     .slice(0, 6);
 
+  const featured = heroItems.find((i) => i.priority === "high") ?? heroItems[0];
+
   return (
     <div className="space-y-4">
       <Hero items={heroItems} domainsCount={brief.domains.length} allTags={allTags} />
+      {featured && <FeaturedFlag item={featured} />}
 
       <div id="brief" className="scroll-mt-20 space-y-4">
         {isFallback && newerEmptyRunAt && (

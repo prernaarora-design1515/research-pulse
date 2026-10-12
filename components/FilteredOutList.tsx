@@ -46,7 +46,7 @@ export default function FilteredOutList({
               <button
                 key={item.paperId}
                 onClick={() => onOpen(item)}
-                className="animate-fade-in-up group flex gap-3 rounded-xl bg-white p-2.5 text-left transition-all hover:-tranneutral-y-0.5 hover:bg-neutral-100 dark:bg-neutral-900 dark:hover:bg-neutral-800"
+                className="animate-fade-in-up group flex gap-3 rounded-xl bg-white p-2.5 text-left transition-all hover:-translate-y-0.5 hover:bg-neutral-100 dark:bg-neutral-900 dark:hover:bg-neutral-800"
                 style={{ animationDelay: open ? `${Math.min(i, 12) * 30}ms` : "0ms" }}
               >
                 <PaperArt seed={item.paperId} alt={item.title} className="aspect-[3/4] w-12 shrink-0" />

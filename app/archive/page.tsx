@@ -36,7 +36,7 @@ export default async function ArchivePage() {
                   Week of {b.weekStart}
                 </p>
                 <p className="text-xs uppercase tracking-wide text-neutral-500 dark:text-neutral-500">
-                  {b.papersScanned} papers scanned &middot; {b.status}
+                  {b.papersScanned} papers scanned
                 </p>
                 <p className="mt-1 text-[11px] text-neutral-400 dark:text-neutral-600">
                   {b.createdAt.toISOString().slice(0, 16).replace("T", " ")} UTC
