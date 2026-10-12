@@ -5,8 +5,8 @@ import { useState } from "react";
 export type Priority = "low" | "medium" | "high";
 
 const textClass: Record<string, string> = {
-  high: "text-red-700 dark:text-red-400",
-  medium: "text-amber-700 dark:text-amber-400",
+  high: "font-bold text-neutral-900 dark:text-neutral-100",
+  medium: "text-neutral-600 dark:text-neutral-300",
   low: "text-neutral-500 dark:text-neutral-400",
 };
 

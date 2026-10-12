@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import type { BriefItemView } from "@/lib/db/briefQueries";
 
 type Featured = BriefItemView & { domainName: string };
@@ -9,14 +9,38 @@ type Featured = BriefItemView & { domainName: string };
  * The week's featured paper, printed on a sheet of paper hung in a dark
  * band and waving like a flag. The wave is an SVG displacement map whose
  * noise frequency is animated, so the whole sheet -- edges and type --
- * ripples together.
+ * ripples together. The sheet unfurls from its top edge as it scrolls
+ * into view, tied to scroll position.
  */
 export default function FeaturedFlag({ item }: { item: Featured }) {
   const [animate, setAnimate] = useState(false);
+  const sheetRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     // eslint-disable-next-line react-hooks/set-state-in-effect
-    setAnimate(!window.matchMedia("(prefers-reduced-motion: reduce)").matches);
+    setAnimate(!reduced);
+    const el = sheetRef.current;
+    if (!el || reduced) return;
+
+    function update() {
+      if (!el) return;
+      const r = el.getBoundingClientRect();
+      const vh = window.innerHeight;
+      // 0 when the sheet's top edge enters the bottom of the viewport,
+      // 1 once it has risen to ~35% from the top.
+      const p = Math.min(1, Math.max(0, (vh - r.top) / (vh * 0.65)));
+      const e = 1 - Math.pow(1 - p, 3);
+      el.style.transform = `perspective(1400px) rotateX(${(1 - e) * -78}deg) translateY(${(1 - e) * -40}px) scale(${0.9 + e * 0.1})`;
+      el.style.opacity = String(Math.min(1, e * 1.4));
+    }
+    update();
+    window.addEventListener("scroll", update, { passive: true });
+    window.addEventListener("resize", update);
+    return () => {
+      window.removeEventListener("scroll", update);
+      window.removeEventListener("resize", update);
+    };
   }, []);
 
   const lead = item.authors[0] + (item.authors.length > 1 ? " et al." : "");
@@ -56,6 +80,7 @@ export default function FeaturedFlag({ item }: { item: Featured }) {
           </p>
         </div>
 
+        <div ref={sheetRef} className="origin-top will-change-transform">
         <a
           href={item.url}
           target="_blank"
@@ -93,6 +118,7 @@ export default function FeaturedFlag({ item }: { item: Featured }) {
             </p>
           </div>
         </a>
+        </div>
       </div>
     </section>
   );
