@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import PdfThumbnail from "@/components/PdfThumbnail";
+import Reveal from "@/components/Reveal";
 
 type Bookmark = {
   id: number;
@@ -97,10 +98,9 @@ export default function SavedClient({ initialBookmarks }: { initialBookmarks: Bo
 
       <div className="space-y-3">
         {filtered.map((b, i) => (
+          <Reveal key={b.id} delay={Math.min(i, 10) * 40}>
           <div
-            key={b.id}
-            className="animate-fade-in-up group flex gap-4 overflow-hidden border-2 border-slate-200 bg-white p-3 transition-all hover:-translate-y-0.5 hover:border-slate-900 hover:shadow-[4px_4px_0_0_var(--color-accent)] dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-neutral-100"
-            style={{ animationDelay: `${Math.min(i, 10) * 40}ms` }}
+            className="group flex gap-4 overflow-hidden border-2 border-slate-200 bg-white p-3 transition-all hover:-translate-y-0.5 hover:border-slate-900 hover:shadow-[4px_4px_0_0_var(--color-accent)] dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-neutral-100"
           >
             <PdfThumbnail
               pdfUrl={pdfUrlFor(b.url)}
@@ -145,6 +145,7 @@ export default function SavedClient({ initialBookmarks }: { initialBookmarks: Bo
               </div>
             </div>
           </div>
+          </Reveal>
         ))}
       </div>
     </div>

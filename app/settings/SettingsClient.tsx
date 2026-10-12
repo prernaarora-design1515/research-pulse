@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Reveal from "@/components/Reveal";
 
 type Domain = {
   id: number;
@@ -130,6 +131,7 @@ export default function SettingsClient({
         Settings
       </h1>
 
+      <Reveal>
       <section className="space-y-3">
         <h2 className="text-sm font-medium text-slate-500 dark:text-neutral-400">
           Recipient email
@@ -153,7 +155,9 @@ export default function SettingsClient({
           </p>
         )}
       </section>
+      </Reveal>
 
+      <Reveal delay={80}>
       <section className="space-y-3">
         <h2 className="text-sm font-medium text-slate-500 dark:text-neutral-400">Run now</h2>
         <button
@@ -170,7 +174,9 @@ export default function SettingsClient({
           </p>
         )}
       </section>
+      </Reveal>
 
+      <Reveal delay={160}>
       <section className="space-y-3">
         <h2 className="text-sm font-medium text-slate-500 dark:text-neutral-400">Domains</h2>
         <div className="divide-y divide-slate-200 border-2 border-slate-200 bg-white dark:divide-neutral-800 dark:border-neutral-800 dark:bg-neutral-900">
@@ -278,6 +284,7 @@ export default function SettingsClient({
           </button>
         </form>
       </section>
+      </Reveal>
     </div>
   );
 }

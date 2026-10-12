@@ -69,7 +69,7 @@ export default function CursorBlob() {
       ref={containerRef}
       aria-hidden
       className="pointer-events-none fixed left-0 top-0 z-30"
-      style={{ width: BOX, height: BOX, mixBlendMode: "difference", filter: "url(#ink-goo)" }}
+      style={{ width: BOX, height: BOX, opacity: 0.55, filter: "url(#ink-goo)" }}
     >
       <svg width="0" height="0" className="absolute">
         <defs>

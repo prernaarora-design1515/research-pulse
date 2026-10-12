@@ -6,6 +6,7 @@ import ThemeToggle from "@/components/ThemeToggle";
 import LiveClock from "@/components/LiveClock";
 import NavLinks from "@/components/NavLinks";
 import CursorBlob from "@/components/CursorBlob";
+import Footer from "@/components/Footer";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -40,7 +41,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body className="min-h-full flex flex-col font-sans">
         <div
           aria-hidden
-          className="grain-overlay pointer-events-none fixed inset-0 z-[999] opacity-[0.05] mix-blend-overlay"
+          className="grain-overlay pointer-events-none fixed inset-0 z-[999] opacity-[0.07] mix-blend-overlay"
         />
         <CursorBlob />
         <header className="sticky top-0 z-10 border-b-2 border-slate-900 bg-white/90 backdrop-blur-sm dark:border-neutral-100 dark:bg-black/90">
@@ -59,9 +60,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           </nav>
         </header>
         <main className="mx-auto w-full max-w-5xl flex-1 px-5 py-10 sm:px-8">{children}</main>
-        <footer className="border-t border-slate-200/80 px-5 py-6 text-center text-xs uppercase tracking-[0.2em] text-slate-400 sm:px-8 dark:border-neutral-800/80 dark:text-neutral-600">
-          The system narrows &middot; Kavita chooses
-        </footer>
+        <Footer />
       </body>
     </html>
   );
