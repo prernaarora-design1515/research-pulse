@@ -4,7 +4,7 @@ import { useState } from "react";
 import type { BriefDetail, BriefItemView } from "@/lib/db/briefQueries";
 import DomainPlacards from "./DomainPlacards";
 import FilteredOutList from "./FilteredOutList";
-import PaperMarquee from "./PaperMarquee";
+import PaperRow from "./PaperRow";
 import PaperDetailModal from "./PaperDetailModal";
 
 export default function BriefView({
@@ -45,11 +45,10 @@ export default function BriefView({
 
           <div key={activeDomain.domainId} className="animate-fade-in-up space-y-4">
             <p className="text-xs text-slate-400 dark:text-neutral-600">
-              {activeDomain.scanned} scanned, {activeDomain.selected.length} shown &middot;
-              scroll over the papers to drive them
+              {activeDomain.scanned} scanned, {activeDomain.selected.length} shown
             </p>
 
-            <PaperMarquee items={activeDomain.selected} onOpen={setOpenItem} />
+            <PaperRow items={activeDomain.selected} onOpen={setOpenItem} />
 
             <FilteredOutList items={activeDomain.filteredOut} />
           </div>
