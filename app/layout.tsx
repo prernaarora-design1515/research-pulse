@@ -5,6 +5,7 @@ import ThemeScript from "@/components/ThemeScript";
 import ThemeToggle from "@/components/ThemeToggle";
 import LiveClock from "@/components/LiveClock";
 import NavLinks from "@/components/NavLinks";
+import CursorBlob from "@/components/CursorBlob";
 import "./globals.css";
 
 const fraunces = Fraunces({
@@ -41,6 +42,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
           aria-hidden
           className="grain-overlay pointer-events-none fixed inset-0 z-[999] opacity-[0.05] mix-blend-overlay"
         />
+        <CursorBlob />
         <header className="sticky top-0 z-10 border-b-2 border-slate-900 bg-white/90 backdrop-blur-sm dark:border-neutral-100 dark:bg-black/90">
           <nav className="mx-auto flex max-w-5xl flex-wrap items-center justify-between gap-x-6 gap-y-2 px-5 py-4 sm:px-8">
             <Link
