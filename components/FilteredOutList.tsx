@@ -17,10 +17,10 @@ export default function FilteredOutList({
   if (items.length === 0) return null;
 
   return (
-    <div className="overflow-hidden border-2 border-dashed border-slate-900/60 dark:border-neutral-100/40">
+    <div className="overflow-hidden rounded-2xl bg-slate-50 dark:bg-neutral-900/50">
       <button
         onClick={() => setOpen(!open)}
-        className="flex w-full items-center gap-2 bg-slate-50 px-4 py-3 text-left text-sm font-medium uppercase tracking-wide text-slate-600 transition-colors hover:bg-slate-100 hover:text-accent active:scale-[0.99] dark:bg-neutral-900/50 dark:text-neutral-400 dark:hover:bg-neutral-800/70"
+        className="flex w-full items-center gap-2 px-4 py-3 text-left text-sm font-medium uppercase tracking-wide text-slate-600 transition-colors hover:text-accent active:scale-[0.99] dark:text-neutral-400"
       >
         <span
           className={`inline-block text-accent transition-transform duration-300 ease-out ${
@@ -36,7 +36,7 @@ export default function FilteredOutList({
       </button>
 
       <div
-        className={`grid bg-slate-50/50 transition-all duration-300 ease-out dark:bg-neutral-900/30 ${
+        className={`grid transition-all duration-300 ease-out ${
           open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
         }`}
       >
@@ -46,14 +46,10 @@ export default function FilteredOutList({
               <button
                 key={item.paperId}
                 onClick={() => onOpen(item)}
-                className="animate-fade-in-up group flex gap-3 border-2 border-slate-200 bg-white p-2.5 text-left transition-all hover:-translate-y-0.5 hover:border-slate-900 hover:shadow-[3px_3px_0_0_var(--color-accent)] dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-neutral-100"
+                className="animate-fade-in-up group flex gap-3 rounded-xl bg-white p-2.5 text-left transition-all hover:-translate-y-0.5 hover:bg-slate-100 dark:bg-neutral-900 dark:hover:bg-neutral-800"
                 style={{ animationDelay: open ? `${Math.min(i, 12) * 30}ms` : "0ms" }}
               >
-                <PaperArt
-                  seed={item.paperId}
-                  alt={item.title}
-                  className="aspect-[3/4] w-12 shrink-0 border border-slate-300 dark:border-neutral-700"
-                />
+                <PaperArt seed={item.paperId} alt={item.title} className="aspect-[3/4] w-12 shrink-0" />
                 <div className="min-w-0 flex-1">
                   <div className="flex items-start justify-between gap-2">
                     <p className="line-clamp-2 text-xs font-medium text-slate-700 group-hover:text-accent dark:text-neutral-300">

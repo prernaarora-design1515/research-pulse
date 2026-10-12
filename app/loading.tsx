@@ -6,7 +6,7 @@ export default function Loading() {
         {[0, 1, 2].map((i) => (
           <div
             key={i}
-            className="aspect-[3/4] animate-pulse border-2 border-slate-200 bg-slate-200/50 dark:border-neutral-800 dark:bg-neutral-800/50"
+            className="aspect-[3/4] animate-pulse rounded-2xl bg-slate-200/50 dark:bg-neutral-800/50"
             style={{ animationDelay: `${i * 100}ms` }}
           />
         ))}

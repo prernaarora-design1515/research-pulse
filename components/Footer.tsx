@@ -14,7 +14,7 @@ const RESOURCE_LINKS = [
 
 export default function Footer() {
   return (
-    <footer className="border-t-2 border-slate-900 dark:border-neutral-100">
+    <footer className="border-t border-slate-200 dark:border-neutral-800">
       <div className="mx-auto grid max-w-5xl grid-cols-1 gap-10 px-5 py-12 sm:px-8 md:grid-cols-4">
         <div className="md:col-span-2">
           <p className="font-display text-3xl font-black italic leading-tight tracking-tight text-slate-900 dark:text-neutral-100">

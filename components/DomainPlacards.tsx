@@ -18,7 +18,7 @@ export default function DomainPlacards({
 }) {
   return (
     <div className="-mx-5 overflow-x-auto px-5 sm:-mx-8 sm:px-8 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-      <div className="inline-flex gap-1 rounded-full border-2 border-slate-900 bg-white p-1 dark:border-neutral-100 dark:bg-neutral-900">
+      <div className="inline-flex gap-1 rounded-full bg-slate-100 p-1 dark:bg-neutral-900">
         {domains.map((d) => {
           const active = d.domainId === activeId;
           return (

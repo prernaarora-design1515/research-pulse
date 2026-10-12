@@ -96,12 +96,12 @@ export default function SavedClient({ initialBookmarks }: { initialBookmarks: Bo
         {filtered.map((b, i) => (
           <Reveal key={b.id} delay={Math.min(i, 10) * 40}>
           <div
-            className="group flex gap-4 overflow-hidden border-2 border-slate-200 bg-white p-3 transition-all hover:-translate-y-0.5 hover:border-slate-900 hover:shadow-[4px_4px_0_0_var(--color-accent)] dark:border-neutral-800 dark:bg-neutral-900 dark:hover:border-neutral-100"
+            className="group flex gap-4 overflow-hidden rounded-2xl bg-slate-50 p-3 transition-all hover:bg-slate-100 dark:bg-neutral-900 dark:hover:bg-neutral-800/70"
           >
             <PaperArt
               seed={b.paperId}
               alt={b.title}
-              className="aspect-[3/4] w-20 shrink-0 border border-slate-300 dark:border-neutral-700 sm:w-24"
+              className="aspect-[3/4] w-20 shrink-0 sm:w-24"
             />
             <div className="min-w-0 flex-1">
               <div className="flex items-start justify-between gap-3">
@@ -124,17 +124,22 @@ export default function SavedClient({ initialBookmarks }: { initialBookmarks: Bo
                 {b.authors.slice(0, 4).join(", ")}
                 {b.authors.length > 4 ? " et al." : ""} &middot; {b.publishedAt.slice(0, 10)}
               </p>
+              {b.note && (
+                <p className="mt-2 rounded-xl bg-white px-3 py-2 text-xs italic text-slate-600 dark:bg-neutral-800 dark:text-neutral-400">
+                  &ldquo;{b.note}&rdquo;
+                </p>
+              )}
               <div className="mt-3 flex items-center gap-2">
                 <input
                   type="text"
                   defaultValue={b.tags.join(", ")}
                   placeholder="tags, comma-separated"
                   onChange={(e) => setTagDrafts((prev) => ({ ...prev, [b.id]: e.target.value }))}
-                  className="flex-1 border-2 border-slate-300 bg-white px-2 py-1 text-xs text-slate-900 transition-colors focus:border-accent focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
+                  className="flex-1 rounded-full border border-slate-300 bg-white px-3 py-1 text-xs text-slate-900 transition-colors focus:border-accent focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
                 />
                 <button
                   onClick={() => saveTags(b)}
-                  className="bg-slate-900 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-white transition-all hover:bg-accent active:scale-95 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-accent dark:hover:text-accent-foreground"
+                  className="rounded-full bg-slate-900 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-white transition-all hover:bg-accent active:scale-95 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-accent dark:hover:text-accent-foreground"
                 >
                   Save tags
                 </button>

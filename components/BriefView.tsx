@@ -25,6 +25,7 @@ export default function BriefView({
   const [activeId, setActiveId] = useState(brief.domains[0]?.domainId);
   const activeDomain = brief.domains.find((d) => d.domainId === activeId) ?? brief.domains[0];
   const [openItem, setOpenItem] = useState<BriefItemView | null>(null);
+  const [priorityFilter, setPriorityFilter] = useState<"all" | Priority>("all");
   // Priority changes made in the modal are saved to the DB, but the brief
   // data here is a server-rendered snapshot -- without this, a changed
   // priority would never show up anywhere until a full page reload.
@@ -58,6 +59,19 @@ export default function BriefView({
   });
   const filteredOutItems = (activeDomain?.filteredOut ?? []).map(applyOverride);
 
+  const visibleMainRowItems =
+    priorityFilter === "all"
+      ? mainRowItems
+      : mainRowItems.filter((item) => item.priority === priorityFilter);
+
+  const priorityCounts = mainRowItems.reduce(
+    (acc, item) => {
+      acc[item.priority as Priority] = (acc[item.priority as Priority] ?? 0) + 1;
+      return acc;
+    },
+    {} as Record<Priority, number>
+  );
+
   return (
     <div className="space-y-8">
       <div className="animate-fade-in-up">
@@ -81,7 +95,10 @@ export default function BriefView({
               isUnscored: d.selected.length === 0,
             }))}
             activeId={activeDomain.domainId}
-            onSelect={setActiveId}
+            onSelect={(id) => {
+              setActiveId(id);
+              setPriorityFilter("all");
+            }}
           />
 
           <div key={activeDomain.domainId} className="animate-fade-in-up space-y-4">
@@ -90,8 +107,37 @@ export default function BriefView({
               {!hasSelected && hasAnyPapers && " · showing all scanned papers (none AI-scored yet)"}
             </p>
 
+            {hasAnyPapers && mainRowItems.length > 0 && (
+              <div className="flex flex-wrap gap-2">
+                {(["all", "high", "medium", "low"] as const).map((p) => {
+                  const count = p === "all" ? mainRowItems.length : priorityCounts[p] ?? 0;
+                  const active = priorityFilter === p;
+                  return (
+                    <button
+                      key={p}
+                      onClick={() => setPriorityFilter(p)}
+                      disabled={p !== "all" && count === 0}
+                      className={`rounded-full px-3.5 py-1.5 text-xs font-medium capitalize transition-all disabled:opacity-30 ${
+                        active
+                          ? "bg-slate-900 text-white dark:bg-neutral-100 dark:text-neutral-900"
+                          : "bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-neutral-900 dark:text-neutral-400 dark:hover:bg-neutral-800"
+                      }`}
+                    >
+                      {p} <span className="opacity-60">{count}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+
             {hasAnyPapers ? (
-              <PaperRow items={mainRowItems} onOpen={setOpenItem} />
+              visibleMainRowItems.length > 0 ? (
+                <PaperRow items={visibleMainRowItems} onOpen={setOpenItem} />
+              ) : (
+                <p className="py-10 text-sm text-slate-400 dark:text-neutral-600">
+                  No {priorityFilter}-priority papers in this domain.
+                </p>
+              )
             ) : (
               <p className="py-10 text-sm text-slate-400 dark:text-neutral-600">
                 Nothing found in this domain this week.

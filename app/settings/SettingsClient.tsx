@@ -20,10 +20,10 @@ const emptyForm = {
 };
 
 const inputClass =
-  "w-full border-2 border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 transition-colors focus:border-accent focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100";
+  "w-full rounded-xl border border-slate-300 bg-white px-3 py-2 text-sm text-slate-900 transition-colors focus:border-accent focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100";
 
 const primaryButtonClass =
-  "bg-slate-900 px-4 py-2 text-xs font-semibold uppercase tracking-[0.1em] text-white transition-all hover:bg-accent active:scale-95 disabled:opacity-50 disabled:active:scale-100 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-accent dark:hover:text-accent-foreground";
+  "rounded-full bg-slate-900 px-4 py-2 text-xs font-semibold uppercase tracking-[0.1em] text-white transition-all hover:bg-accent active:scale-95 disabled:opacity-50 disabled:active:scale-100 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-accent dark:hover:text-accent-foreground";
 
 export default function SettingsClient({
   initialDomains,
@@ -132,7 +132,7 @@ export default function SettingsClient({
       </h1>
 
       <Reveal>
-      <section className="space-y-3 border-t-2 border-slate-900 pt-6 dark:border-neutral-100">
+      <section className="space-y-3 rounded-2xl bg-slate-50 p-6 dark:bg-neutral-900">
         <h2 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400 dark:text-neutral-600">
           Recipient email
         </h2>
@@ -158,7 +158,7 @@ export default function SettingsClient({
       </Reveal>
 
       <Reveal delay={80}>
-      <section className="space-y-3 border-t-2 border-slate-900 pt-6 dark:border-neutral-100">
+      <section className="space-y-3 rounded-2xl bg-slate-50 p-6 dark:bg-neutral-900">
         <h2 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400 dark:text-neutral-600">Run now</h2>
         <button
           onClick={handleRunNow}
@@ -177,9 +177,9 @@ export default function SettingsClient({
       </Reveal>
 
       <Reveal delay={160}>
-      <section className="space-y-3 border-t-2 border-slate-900 pt-6 dark:border-neutral-100">
+      <section className="space-y-3 rounded-2xl bg-slate-50 p-6 dark:bg-neutral-900">
         <h2 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-slate-400 dark:text-neutral-600">Domains</h2>
-        <div className="divide-y divide-slate-200 border-2 border-slate-200 bg-white dark:divide-neutral-800 dark:border-neutral-800 dark:bg-neutral-900">
+        <div className="divide-y divide-slate-200 overflow-hidden rounded-2xl bg-white dark:divide-neutral-800 dark:bg-neutral-800/50">
           {domainsList.length === 0 && (
             <p className="p-4 text-sm text-slate-500 dark:text-neutral-500">
               No domains yet. Add one below.
@@ -225,7 +225,7 @@ export default function SettingsClient({
 
         <form
           onSubmit={handleAddDomain}
-          className="space-y-3 border-2 border-slate-200 bg-white p-4 dark:border-neutral-800 dark:bg-neutral-900"
+          className="space-y-3 rounded-2xl bg-white p-4 dark:bg-neutral-800/50"
         >
           <h3 className="font-medium text-slate-800 dark:text-neutral-200">Add a domain</h3>
           <div className="grid gap-3 sm:grid-cols-2">
