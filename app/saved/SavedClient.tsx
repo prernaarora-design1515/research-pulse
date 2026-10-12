@@ -52,7 +52,7 @@ export default function SavedClient({ initialBookmarks }: { initialBookmarks: Bo
 
   return (
     <div className="animate-fade-in-up space-y-6">
-      <h1 className="font-display text-4xl font-black italic tracking-tight text-slate-900 dark:text-neutral-100">
+      <h1 className="font-display text-5xl font-bold uppercase leading-[0.9] tracking-[-0.04em] text-neutral-900 sm:text-7xl dark:text-neutral-100">
         Saved papers
       </h1>
 
@@ -62,8 +62,8 @@ export default function SavedClient({ initialBookmarks }: { initialBookmarks: Bo
             onClick={() => setActiveTag(null)}
             className={`rounded-full px-3 py-1 text-xs font-medium transition-all active:scale-95 ${
               activeTag === null
-                ? "bg-slate-900 text-white dark:bg-accent dark:text-accent-foreground"
-                : "bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-neutral-800 dark:text-neutral-400 dark:hover:bg-neutral-700"
+                ? "bg-neutral-900 text-white dark:bg-accent dark:text-accent-foreground"
+                : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-400 dark:hover:bg-neutral-700"
             }`}
           >
             All
@@ -74,8 +74,8 @@ export default function SavedClient({ initialBookmarks }: { initialBookmarks: Bo
               onClick={() => setActiveTag(tag)}
               className={`rounded-full px-3 py-1 text-xs font-medium transition-all active:scale-95 ${
                 activeTag === tag
-                  ? "bg-slate-900 text-white dark:bg-accent dark:text-accent-foreground"
-                  : "bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-neutral-800 dark:text-neutral-400 dark:hover:bg-neutral-700"
+                  ? "bg-neutral-900 text-white dark:bg-accent dark:text-accent-foreground"
+                  : "bg-neutral-100 text-neutral-600 hover:bg-neutral-200 dark:bg-neutral-800 dark:text-neutral-400 dark:hover:bg-neutral-700"
               }`}
             >
               {tag}
@@ -85,7 +85,7 @@ export default function SavedClient({ initialBookmarks }: { initialBookmarks: Bo
       )}
 
       {filtered.length === 0 && (
-        <p className="text-sm text-slate-500 dark:text-neutral-500">
+        <p className="text-sm text-neutral-500 dark:text-neutral-500">
           {items.length === 0
             ? "No bookmarks yet. Save papers from the brief or archive pages."
             : "No bookmarks with this tag."}
@@ -96,7 +96,7 @@ export default function SavedClient({ initialBookmarks }: { initialBookmarks: Bo
         {filtered.map((b, i) => (
           <Reveal key={b.id} delay={Math.min(i, 10) * 40}>
           <div
-            className="group flex gap-4 overflow-hidden rounded-2xl bg-slate-50 p-3 transition-all hover:bg-slate-100 dark:bg-neutral-900 dark:hover:bg-neutral-800/70"
+            className="group flex gap-4 overflow-hidden rounded-2xl bg-neutral-50 p-3 transition-all hover:bg-neutral-100 dark:bg-neutral-900 dark:hover:bg-neutral-800/70"
           >
             <PaperArt
               seed={b.paperId}
@@ -109,7 +109,7 @@ export default function SavedClient({ initialBookmarks }: { initialBookmarks: Bo
                   href={b.url}
                   target="_blank"
                   rel="noreferrer"
-                  className="font-medium text-slate-900 hover:underline dark:text-neutral-100"
+                  className="font-medium text-neutral-900 hover:underline dark:text-neutral-100"
                 >
                   {b.title}
                 </a>
@@ -120,12 +120,12 @@ export default function SavedClient({ initialBookmarks }: { initialBookmarks: Bo
                   Remove
                 </button>
               </div>
-              <p className="mt-1 text-xs text-slate-500 dark:text-neutral-500">
+              <p className="mt-1 text-xs text-neutral-500 dark:text-neutral-500">
                 {b.authors.slice(0, 4).join(", ")}
                 {b.authors.length > 4 ? " et al." : ""} &middot; {b.publishedAt.slice(0, 10)}
               </p>
               {b.note && (
-                <p className="mt-2 rounded-xl bg-white px-3 py-2 text-xs italic text-slate-600 dark:bg-neutral-800 dark:text-neutral-400">
+                <p className="mt-2 rounded-xl bg-white px-3 py-2 text-xs text-neutral-600 dark:bg-neutral-800 dark:text-neutral-400">
                   &ldquo;{b.note}&rdquo;
                 </p>
               )}
@@ -135,11 +135,11 @@ export default function SavedClient({ initialBookmarks }: { initialBookmarks: Bo
                   defaultValue={b.tags.join(", ")}
                   placeholder="tags, comma-separated"
                   onChange={(e) => setTagDrafts((prev) => ({ ...prev, [b.id]: e.target.value }))}
-                  className="flex-1 rounded-full border border-slate-300 bg-white px-3 py-1 text-xs text-slate-900 transition-colors focus:border-accent focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
+                  className="flex-1 rounded-full border border-neutral-300 bg-white px-3 py-1 text-xs text-neutral-900 transition-colors focus:border-accent focus:outline-none dark:border-neutral-700 dark:bg-neutral-900 dark:text-neutral-100"
                 />
                 <button
                   onClick={() => saveTags(b)}
-                  className="rounded-full bg-slate-900 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-white transition-all hover:bg-accent active:scale-95 dark:bg-neutral-100 dark:text-neutral-900 dark:hover:bg-accent dark:hover:text-accent-foreground"
+                  className="rounded-full bg-neutral-900 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-white transition-all hover:opacity-80 active:scale-95 dark:bg-neutral-100 dark:text-neutral-900"
                 >
                   Save tags
                 </button>

@@ -3,29 +3,39 @@
 @custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
 
 @theme inline {
-  --color-accent: #e3102b;
-  --color-accent-foreground: #ffffff;
-  --font-sans: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
-  --font-display: var(--font-display), Georgia, "Times New Roman", serif;
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-fg);
+  --font-sans: var(--font-sans), "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-display: var(--font-display), "Helvetica Neue", Helvetica, Arial, sans-serif;
+  --font-mono: var(--font-mono), ui-monospace, monospace;
 }
 
 :root {
   color-scheme: light;
+  --accent: #121212;
+  --accent-fg: #f9f9f9;
 }
 
 [data-theme="dark"] {
   color-scheme: dark;
+  --accent: #f1f1f1;
+  --accent-fg: #121412;
 }
 
 body {
-  background-color: #fbfbfb;
-  color: #0a0a0a;
+  background-color: #f9f9f9;
+  color: #121212;
   transition: background-color 150ms ease, color 150ms ease;
 }
 
 [data-theme="dark"] body {
-  background-color: #000000;
-  color: #f2f2f2;
+  background-color: #121412;
+  color: #f1f1f1;
+}
+
+.text-justify-last {
+  text-align: justify;
+  text-align-last: justify;
 }
 
 .grain-overlay {

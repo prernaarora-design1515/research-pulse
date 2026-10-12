@@ -1,7 +1,13 @@
-// Deliberately not a photo of any kind -- every pixel here is drawn in code.
-// A generic identification silhouette plus a height-ruler edge, styled like
-// an old intake/evidence card, with a stamped file number derived from the
-// paper's own id so the same paper always gets the same "file".
+// Drawn entirely in code: the paper's own initials, set huge in outlined
+// grotesk and repeated like a type specimen, on a dark lab panel.
+function initialsFrom(text: string): string {
+  const words = text
+    .replace(/[^A-Za-z0-9\s-]/g, " ")
+    .split(/[\s-]+/)
+    .filter((w) => w.length > 2);
+  return (words.slice(0, 3).map((w) => w[0]).join("") || "RP").toUpperCase();
+}
+
 export default function PaperArt({
   seed,
   alt,
@@ -11,47 +17,43 @@ export default function PaperArt({
   alt: string;
   className?: string;
 }) {
-  const fileNo = String(seed).replace(/\D/g, "").padStart(5, "0").slice(-5);
-  const ticks = Array.from({ length: 11 });
+  const word = initialsFrom(alt);
+  const fileNo = String(seed).replace(/\D/g, "").padStart(4, "0").slice(-4);
+  const rows = [0, 1, 2, 3, 4];
 
   return (
     <div
       role="img"
       aria-label={alt}
-      className={`relative overflow-hidden rounded-2xl bg-[#ece7df] dark:bg-neutral-800 ${className}`}
+      className={`relative overflow-hidden rounded-2xl bg-[#141816] ${className}`}
     >
       <svg
-        viewBox="0 0 300 400"
+        viewBox="0 0 300 300"
         preserveAspectRatio="xMidYMid slice"
         className="absolute inset-0 h-full w-full"
       >
-        {ticks.map((_, i) => (
-          <line
-            key={i}
-            x1="0"
-            x2={i % 5 === 0 ? 18 : 10}
-            y1={(i * 400) / 10}
-            y2={(i * 400) / 10}
-            className="stroke-slate-400/70 dark:stroke-neutral-500/60"
-            strokeWidth="2"
-          />
+        {rows.map((r) => (
+          <text
+            key={r}
+            x="150"
+            y={70 + r * 62}
+            textAnchor="middle"
+            fontFamily="var(--font-display), Helvetica, Arial, sans-serif"
+            fontWeight="800"
+            fontSize="92"
+            letterSpacing="-4"
+            fill={r === 2 ? "#f1f1f1" : "none"}
+            stroke="#f1f1f1"
+            strokeWidth="1.1"
+            opacity={r === 2 ? 1 : 0.45 - Math.abs(r - 2) * 0.1}
+          >
+            {word}
+          </text>
         ))}
-        <g transform="translate(160,235)">
-          <circle cx="0" cy="-78" r="48" className="fill-slate-400/50 dark:fill-neutral-600/60" />
-          <path
-            d="M -85 95 Q -85 -10 0 -10 Q 85 -10 85 95 Z"
-            className="fill-slate-400/50 dark:fill-neutral-600/60"
-          />
-        </g>
       </svg>
-
-      <div className="grain-overlay pointer-events-none absolute inset-0 opacity-[0.12] mix-blend-multiply" />
-
-      <div className="absolute inset-x-0 top-0 flex items-center justify-between bg-black/[0.06] px-3 py-1.5 dark:bg-white/[0.06]">
-        <span className="font-mono text-[9px] tracking-wider text-slate-600 dark:text-neutral-400">
-          FILE Nº {fileNo}
-        </span>
-      </div>
+      <span className="absolute left-3 top-2.5 font-mono text-[9px] uppercase tracking-wider text-[#f1f1f1]/60">
+        ({fileNo})
+      </span>
     </div>
   );
 }

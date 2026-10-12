@@ -16,7 +16,7 @@ function PaperTile({
   return (
     <button
       onClick={onOpen}
-      className={`group flex flex-col gap-3 rounded-2xl p-2.5 text-left transition-colors hover:bg-slate-100 dark:hover:bg-neutral-900 ${
+      className={`group flex flex-col gap-3 rounded-2xl p-2.5 text-left transition-colors hover:bg-neutral-100 dark:hover:bg-neutral-900 ${
         featured ? "sm:col-span-2 sm:row-span-2" : ""
       }`}
     >
@@ -26,20 +26,20 @@ function PaperTile({
           alt={item.title}
           className={featured ? "aspect-[16/10] w-full" : "aspect-[4/3] w-full"}
         />
-        <PriorityStamp priority={item.priority} className="absolute -bottom-2 -right-2 scale-90" />
+        <PriorityStamp priority={item.priority} className="absolute bottom-3 right-3" />
       </div>
       <div>
-        <p className="text-[10px] font-medium uppercase tracking-wider text-slate-400 dark:text-neutral-600">
+        <p className="text-[10px] font-medium uppercase tracking-wider text-neutral-400 dark:text-neutral-600">
           {item.selectionReason}
         </p>
         <h3
-          className={`mt-0.5 font-display italic leading-snug text-slate-900 group-hover:text-accent dark:text-neutral-100 line-clamp-2 ${
+          className={`mt-0.5 font-display leading-snug text-neutral-900 group-hover:text-accent dark:text-neutral-100 line-clamp-2 ${
             featured ? "text-xl" : "text-sm"
           }`}
         >
           {item.title}
         </h3>
-        <p className="mt-1 text-[11px] text-slate-500 dark:text-neutral-500">
+        <p className="mt-1 text-[11px] text-neutral-500 dark:text-neutral-500">
           {item.authors[0]}
           {item.authors.length > 1 ? " et al." : ""} &middot; {item.publishedAt.slice(0, 10)}
         </p>
@@ -57,7 +57,7 @@ export default function PaperRow({
 }) {
   if (items.length === 0) {
     return (
-      <p className="py-10 text-sm text-slate-400 dark:text-neutral-600">
+      <p className="py-10 text-sm text-neutral-400 dark:text-neutral-600">
         Nothing significant surfaced this week in this domain.
       </p>
     );

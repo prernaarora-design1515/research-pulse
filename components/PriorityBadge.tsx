@@ -1,7 +1,7 @@
 const DOT_CLASS: Record<string, string> = {
   high: "bg-accent",
   medium: "bg-amber-500",
-  low: "bg-slate-400 dark:bg-neutral-600",
+  low: "bg-neutral-400 dark:bg-neutral-600",
 };
 
 export default function PriorityBadge({

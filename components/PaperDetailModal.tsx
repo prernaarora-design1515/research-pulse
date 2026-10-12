@@ -50,7 +50,7 @@ export default function PaperDetailModal({
         <button
           onClick={onClose}
           aria-label="Close"
-          className="absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-black/40 text-lg font-bold leading-none text-white backdrop-blur-sm transition-all hover:bg-accent"
+          className="absolute right-4 top-4 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-black/40 text-lg font-bold leading-none text-white backdrop-blur-sm transition-all hover:bg-black/70"
         >
           ×
         </button>
@@ -58,22 +58,22 @@ export default function PaperDetailModal({
         <div className="flex flex-1 flex-col gap-5 overflow-y-auto p-6 sm:flex-row">
           <div className="relative shrink-0 sm:w-40">
             <PaperArt seed={item.paperId} alt={item.title} className="aspect-[3/4] w-full rounded-2xl" />
-            <PriorityStamp priority={item.priority} className="absolute -bottom-2 -right-2" />
+            <PriorityStamp priority={item.priority} className="absolute bottom-3 right-3" />
           </div>
           <div className="min-w-0 flex-1">
             <p className="text-[11px] font-medium uppercase tracking-wider text-accent">
               {item.selectionReason} &middot; score {item.significanceScore}/10
             </p>
-            <h2 className="mt-1 break-words font-display text-xl font-semibold leading-snug text-slate-900 dark:text-neutral-100 sm:text-2xl">
+            <h2 className="mt-1 break-words font-display text-xl font-semibold leading-snug text-neutral-900 dark:text-neutral-100 sm:text-2xl">
               {item.title}
             </h2>
-            <p className="mt-1 text-sm text-slate-500 dark:text-neutral-500">
+            <p className="mt-1 text-sm text-neutral-500 dark:text-neutral-500">
               {item.authors.join(", ")} &middot; {item.publishedAt.slice(0, 10)}
               {item.hfUpvotes != null && <> &middot; {item.hfUpvotes} HF upvotes</>}
             </p>
-            <p className="mt-3 text-sm text-slate-700 dark:text-neutral-300">{item.summary}</p>
-            <p className="mt-3 text-sm text-slate-600 dark:text-neutral-400">
-              <span className="font-medium text-slate-800 dark:text-neutral-200">
+            <p className="mt-3 text-sm text-neutral-700 dark:text-neutral-300">{item.summary}</p>
+            <p className="mt-3 text-sm text-neutral-600 dark:text-neutral-400">
+              <span className="font-medium text-neutral-800 dark:text-neutral-200">
                 Why it matters:{" "}
               </span>
               {item.whyItMatters}
@@ -82,13 +82,13 @@ export default function PaperDetailModal({
               href={item.url}
               target="_blank"
               rel="noreferrer"
-              className="mt-3 inline-block text-xs text-slate-400 underline-offset-2 transition-colors hover:text-accent hover:underline dark:text-neutral-600"
+              className="mt-3 inline-block text-xs text-neutral-400 underline-offset-2 transition-colors hover:text-accent hover:underline dark:text-neutral-600"
             >
               View on arXiv ↗
             </a>
           </div>
         </div>
-        <div className="flex items-center justify-between gap-2 rounded-b-[2rem] bg-slate-50 px-6 py-3 dark:bg-neutral-800/50">
+        <div className="flex items-center justify-between gap-2 rounded-b-[2rem] bg-neutral-50 px-6 py-3 dark:bg-neutral-800/50">
           <PaperActions
             paperId={item.paperId}
             initialBookmarked={item.isBookmarked}
