@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import type { BriefItemView } from "@/lib/db/briefQueries";
 import PdfThumbnail from "./PdfThumbnail";
@@ -55,6 +55,10 @@ function FlashCard({
     >
       <PdfThumbnail pdfUrl={pdfUrlFor(item.url)} alt={item.title} className="absolute inset-0 h-full w-full grayscale-[25%]" />
       <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/40 to-black/10" />
+      <div
+        aria-hidden
+        className="absolute inset-x-[-20%] bottom-[-20%] h-3/4 bg-[radial-gradient(ellipse_at_bottom,rgba(0,0,0,0.95),rgba(0,0,0,0.5)_55%,transparent_80%)] blur-xl"
+      />
 
       {item.significanceScore > 0 && (
         <div
@@ -70,10 +74,10 @@ function FlashCard({
           {item.domainName}
         </span>
         <div>
-          <h3 className="font-display text-lg font-semibold leading-[1.05] text-white line-clamp-2">
+          <h3 className="font-display text-xl font-black leading-[0.98] text-white line-clamp-2 sm:text-2xl">
             {item.title}
           </h3>
-          <p className="mt-1 text-xs text-white/60 line-clamp-1">{item.summary}</p>
+          <p className="mt-1.5 text-xs text-white/65 line-clamp-1">{item.summary}</p>
         </div>
       </div>
     </button>
@@ -113,12 +117,33 @@ export default function Hero({
   const [base, setBase] = useState(0);
   const [openItem, setOpenItem] = useState<BriefItemView | null>(null);
   const n = items.length;
+  const autoplayRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  useEffect(() => {
+    if (n < 2) return;
+    autoplayRef.current = setInterval(() => {
+      setBase((b) => (b + 1) % n);
+    }, 6000);
+    return () => {
+      if (autoplayRef.current) clearInterval(autoplayRef.current);
+    };
+  }, [n]);
+
+  function restartAutoplay() {
+    if (autoplayRef.current) clearInterval(autoplayRef.current);
+    if (n < 2) return;
+    autoplayRef.current = setInterval(() => {
+      setBase((b) => (b + 1) % n);
+    }, 6000);
+  }
 
   function next() {
     setBase((b) => (b + 1) % n);
+    restartAutoplay();
   }
   function prev() {
     setBase((b) => (b - 1 + n) % n);
+    restartAutoplay();
   }
 
   function scrollToBrief() {
