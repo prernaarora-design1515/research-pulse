@@ -83,23 +83,54 @@ function isValidVerdict(v: unknown): v is GeminiVerdict {
   );
 }
 
+// Free-tier quota is counted per model, so when the primary Flash model is
+// out of requests for the day (429) or overloaded (503), the next Flash
+// model in line usually still has capacity.
+const DEFAULT_FALLBACK_MODELS = ["gemini-3.7-flash", "gemini-flash-latest", "gemini-3.5-flash-lite"];
+
+function modelChain(): string[] {
+  const primary = process.env.GEMINI_MODEL;
+  if (!primary) throw new Error("GEMINI_MODEL is not set");
+  const fallbacks = process.env.GEMINI_FALLBACK_MODELS
+    ? process.env.GEMINI_FALLBACK_MODELS.split(",").map((m) => m.trim()).filter(Boolean)
+    : DEFAULT_FALLBACK_MODELS;
+  return Array.from(new Set([primary, ...fallbacks]));
+}
+
+function isCapacityError(err: unknown): boolean {
+  const msg = err instanceof Error ? err.message : String(err);
+  return /"code":\s*(429|503)|RESOURCE_EXHAUSTED|UNAVAILABLE|overloaded/i.test(msg);
+}
+
+// Remembered across batches in one run so we don't re-hit an exhausted model.
+const exhaustedModels = new Set<string>();
+
 async function callGemini(prompt: string): Promise<string> {
   const ai = getClient();
-  const model = process.env.GEMINI_MODEL;
-  if (!model) throw new Error("GEMINI_MODEL is not set");
+  let lastError: unknown;
 
-  const response = await ai.models.generateContent({
-    model,
-    contents: prompt,
-    config: {
-      responseMimeType: "application/json",
-      maxOutputTokens: 8192,
-    },
-  });
+  for (const model of modelChain()) {
+    if (exhaustedModels.has(model)) continue;
+    try {
+      const response = await ai.models.generateContent({
+        model,
+        contents: prompt,
+        config: {
+          responseMimeType: "application/json",
+          maxOutputTokens: 8192,
+        },
+      });
+      const text = response.text;
+      if (!text) throw new Error("Gemini returned an empty response");
+      return text;
+    } catch (err) {
+      lastError = err;
+      if (!isCapacityError(err)) throw err;
+      exhaustedModels.add(model);
+    }
+  }
 
-  const text = response.text;
-  if (!text) throw new Error("Gemini returned an empty response");
-  return text;
+  throw lastError instanceof Error ? lastError : new Error("All Gemini models are out of capacity");
 }
 
 function parseVerdicts(rawText: string): GeminiVerdict[] | null {
@@ -146,6 +177,7 @@ export async function scorePapers(
 ): Promise<{ verdicts: Map<string, GeminiVerdict>; batchErrors: string[] }> {
   const verdictsByArxivId = new Map<string, GeminiVerdict>();
   const batchErrors: string[] = [];
+  exhaustedModels.clear();
 
   for (let i = 0; i < papers.length; i += BATCH_SIZE) {
     const batch = papers.slice(i, i + BATCH_SIZE);
