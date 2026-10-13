@@ -43,6 +43,30 @@ export default function SettingsClient({
   const [runningBrief, setRunningBrief] = useState(false);
   const [runResult, setRunResult] = useState<string | null>(null);
 
+  const [rescoring, setRescoring] = useState(false);
+
+  async function handleRescore() {
+    setRescoring(true);
+    setRunResult(null);
+    try {
+      const res = await fetch("/api/rescore", { method: "POST" });
+      const data = await res.json();
+      if (!res.ok) {
+        setRunResult(`Failed: ${data.error ?? "unknown error"}`);
+        return;
+      }
+      setRunResult(
+        data.scored === 0 && data.remaining === 0
+          ? "Every paper in the current brief already has a score."
+          : `Scored ${data.scored} paper(s).${data.remaining ? ` ${data.remaining} still unscored — Gemini is out of capacity, try again later.` : ""}`
+      );
+    } catch {
+      setRunResult("Something went wrong while scoring.");
+    } finally {
+      setRescoring(false);
+    }
+  }
+
   async function handleRunNow() {
     setRunningBrief(true);
     setRunResult(null);
@@ -160,14 +184,24 @@ export default function SettingsClient({
       <Reveal delay={80}>
       <section className="space-y-3 rounded-2xl bg-neutral-50 p-6 dark:bg-neutral-900">
         <h2 className="text-[11px] font-semibold uppercase tracking-[0.2em] text-neutral-400 dark:text-neutral-600">Run now</h2>
-        <button
-          onClick={handleRunNow}
-          disabled={runningBrief}
-          title="Scans active domains, scores with Gemini, emails the result. Takes 1-4 min."
-          className={primaryButtonClass}
-        >
-          {runningBrief ? "Running…" : "Run now"}
-        </button>
+        <div className="flex flex-wrap gap-3">
+          <button
+            onClick={handleRunNow}
+            disabled={runningBrief || rescoring}
+            title="Scans active domains, scores with Gemini, emails the result. Takes 1-4 min."
+            className={primaryButtonClass}
+          >
+            {runningBrief ? "Running…" : "Run now"}
+          </button>
+          <button
+            onClick={handleRescore}
+            disabled={runningBrief || rescoring}
+            title="Asks Gemini to score papers in the current brief that it missed (e.g. after a quota limit)."
+            className="rounded-full border border-neutral-900 px-4 py-2 text-xs font-semibold uppercase tracking-[0.1em] text-neutral-900 transition-all hover:-rotate-1 active:scale-95 disabled:opacity-50 dark:border-neutral-100 dark:text-neutral-100"
+          >
+            {rescoring ? "Scoring…" : "Score unscored papers"}
+          </button>
+        </div>
         {runResult && (
           <p className="animate-fade-in-up text-sm text-neutral-600 dark:text-neutral-400">
             {runResult}
